@@ -1,0 +1,37 @@
+{{template "base"}} {{define "main"}}
+{{template "navbar" .}}
+<div class="container mt-3">
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Projects</h4>
+        <a href="#" class="btn btn-primary">Create New Project</a>
+        <table class="table table-sm table-bordered table-hover mt-3">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A backend</td>
+                    <td><a href="/projects/details/1" class="btn btn-outline-primary btn-sm">Details</a></td>
+                </tr>
+                <tr>
+                    <td>A backend</td>
+                    <td><a href="/projects/details/2" class="btn btn-outline-primary btn-sm">Details</a></td>
+                </tr>
+                <tr>
+                    <td>A backend</td>
+                    <td><a href="/projects/details/3" class="btn btn-outline-primary btn-sm">Details</a></td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{{end}}

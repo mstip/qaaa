@@ -1,0 +1,74 @@
+{{template "base"}} {{define "main"}} {{template "navbar" .}}
+<div class="container mt-3">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">TestRuns</h4>
+          <a href="#" class="btn btn-primary">Schedule Testrun</a>
+          <table class="table table-sm table-bordered table-hover mt-3">
+            <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Success</th>
+                <th>Timestamp</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>A backend</td>
+                <td><i class="text-success bi-check-lg"></i>success</td>
+                <td>21.11.2021 10:45</td>
+                <td>
+                  <a
+                    href="/projects/details/1"
+                    class="btn btn-outline-primary btn-sm"
+                    >Details</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>A backend</td>
+                <td><i class="text-danger bi-x-lg"></i> false</td>
+                <td>21.11.2021 10:45</td>
+                <td>
+                  <a
+                    href="/projects/details/1"
+                    class="btn btn-outline-primary btn-sm"
+                    >Details</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>A backend</td>
+                <td>false</td>
+                <td>21.11.2021 10:45</td>
+                <td>
+                  <a
+                    href="/projects/details/1"
+                    class="btn btn-outline-primary btn-sm"
+                    >Details</a
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>A backend</td>
+                <td>false</td>
+                <td>21.11.2021 10:45</td>
+                <td>
+                  <a
+                    href="/projects/details/1"
+                    class="btn btn-outline-primary btn-sm"
+                    >Details</a
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

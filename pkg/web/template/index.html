@@ -1,13 +1,40 @@
-{{template "base" .}} {{define "main"}}
-<div class="container">
+{{template "base"}} {{define "main"}}
+{{template "navbar" true}}
+<div class="container mt-3">
+  {{if .Flashes}} {{range $flash := .Flashes}}
+  <div class="alert alert-danger" role="alert">{{$flash}}</div>
+  {{end}} {{end}}
+
   <div class="row">
-    <h1>QAAA</h1>
-  </div>
-  <div class="row">
-    <h1 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h1>
-  </div>
-  <div class="row">
-      <h1>{{.Counter}}</h1>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Login</h4>
+          <form action="/login" method="POST">
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                aria-describedby="username"
+                name="username"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {{end}}
