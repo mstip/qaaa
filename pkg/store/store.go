@@ -1,17 +1,17 @@
 package store
 
+import (
+	"github.com/mstip/qaaa/pkg/model"
+)
+
 type Store struct {
-	counter int
-}
-
-func (s *Store) IncCounter() {
-	s.counter += 1
-}
-
-func (s *Store) Counter() int {
-	return s.counter
+	counter       int
+	projects      []model.Project
+	nextProjectId uint64
 }
 
 func NewStore() *Store {
-	return &Store{}
+	s := &Store{}
+	s.seedWithDemoData()
+	return s
 }

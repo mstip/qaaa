@@ -1,5 +1,5 @@
 {{template "base"}} {{define "main"}}
-{{template "navbar" .}}
+{{template "navbar"}}
 <div class="container mt-3">
 <div class="row">
   <div class="col">
@@ -7,26 +7,27 @@
       <div class="card-body">
         <h4 class="card-title">Projects</h4>
         <a href="#" class="btn btn-primary">Create New Project</a>
+        <br>{{ printf "%#v" .Projects}}
+        <br>{{ printf "%#v" .}}
+       
         <table class="table table-sm table-bordered table-hover mt-3">
             <thead>
                 <tr>
                     <th>Name</th>
+                    <th>Description</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
+                {{range $project := .Projects}}
                 <tr>
-                    <td>A backend</td>
-                    <td><a href="/projects/details/1" class="btn btn-outline-primary btn-sm">Details</a></td>
+                    <td>{{$project.Name}}</td>
+                    <td>{{$project.Description}}</td>
+                    <td><a href="/projects/details/{{$project.Id}}" class="btn btn-outline-primary btn-sm">Details</a></td>
                 </tr>
-                <tr>
-                    <td>A backend</td>
-                    <td><a href="/projects/details/2" class="btn btn-outline-primary btn-sm">Details</a></td>
-                </tr>
-                <tr>
-                    <td>A backend</td>
-                    <td><a href="/projects/details/3" class="btn btn-outline-primary btn-sm">Details</a></td>
-                </tr>
+               
+                {{end}}
+  
             </tbody>
         </table>
       </div>
