@@ -1,4 +1,6 @@
-{{template "base"}} {{define "main"}} {{template "navbar" .}}
+{{template "base" .}}
+{{define "main"}}
+{{template "navbar" .}}
 <div class="container mt-3">
   <div class="row">
     <div class="col">
@@ -82,7 +84,7 @@
                         <td colspan="2">
                           <button class="btn btn-primary btn-sm">Create new test</button>
                         </td>
-                      </tr> 
+                      </tr>
                       <tr>
                         <td>Create</td>
                         <td>

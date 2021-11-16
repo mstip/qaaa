@@ -1,38 +1,36 @@
-{{template "base"}} {{define "main"}}
+{{template "base" .}}
+{{define "main"}}
 {{template "navbar"}}
 <div class="container mt-3">
-<div class="row">
-  <div class="col">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="card-title">Projects</h4>
-        <a href="#" class="btn btn-primary">Create New Project</a>
-        <br>{{ printf "%#v" .Projects}}
-        <br>{{ printf "%#v" .}}
-       
-        <table class="table table-sm table-bordered table-hover mt-3">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Projects</h4>
+          <a href="#" class="btn btn-primary">Create New Project</a>
+          <table class="table table-sm table-bordered table-hover mt-3">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th></th>
-                </tr>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
-                {{range $project := .Projects}}
-                <tr>
-                    <td>{{$project.Name}}</td>
-                    <td>{{$project.Description}}</td>
-                    <td><a href="/projects/details/{{$project.Id}}" class="btn btn-outline-primary btn-sm">Details</a></td>
-                </tr>
-               
-                {{end}}
-  
+              {{range $project := .Projects}}
+              <tr>
+                <td>{{$project.Name}}</td>
+                <td>{{$project.Description}}</td>
+                <td>
+                  <a href="/projects/details/{{$project.Id}}" class="btn btn-outline-primary btn-sm">Details</a>
+                </td>
+              </tr>
+              {{end}}
             </tbody>
-        </table>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 {{end}}

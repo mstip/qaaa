@@ -1,7 +1,6 @@
 package web
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -87,15 +86,10 @@ func (ws *WebServer) projectsList(w http.ResponseWriter, r *http.Request) {
 	}
 
 	projects := ws.store.GetProjectsList()
-	log.Println(projects)
-	err := ws.templates["projects_list"].Execute(w, struct {
+
+	ws.templates["projects_list"].Execute(w, struct {
 		Projects []store.ProjectListData
 	}{
 		Projects: projects,
 	})
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
