@@ -39,7 +39,7 @@ func (st *sessionStore) addFlash(flash string, w http.ResponseWriter, r *http.Re
 		log.Println(err)
 		return err
 	}
-	session.AddFlash("invalid credentials")
+	session.AddFlash(flash)
 	err = session.Save(r, w)
 	if err != nil {
 		return err
