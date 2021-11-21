@@ -53,3 +53,9 @@ Project
                command: curl post login newuser
                check: status code 200
 ```
+
+### Todo
+Data refactoren, with related ids ?
+deep checks mehr asserts für json
+web checks
+ui für tests

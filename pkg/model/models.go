@@ -1,11 +1,12 @@
 package model
 
+import "github.com/mstip/qaaa/pkg/task"
+
 type Task struct {
 	Id          uint64
 	Name        string
 	Description string
-	Command     string
-	Check       string
+	Task        task.Tasker
 }
 
 type Suite struct {

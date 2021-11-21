@@ -8,6 +8,8 @@ type Store struct {
 	counter       int
 	projects      []model.Project
 	nextProjectId uint64
+	nextSuiteId   uint64
+	nextTaskId    uint64
 }
 
 func NewStore() *Store {
