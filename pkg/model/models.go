@@ -2,10 +2,16 @@ package model
 
 import "github.com/mstip/qaaa/pkg/task"
 
+const (
+	TaskTypeJsonApi = "jsonapi"
+	TaskTypeWeb     = "web"
+)
+
 type Task struct {
 	Id          uint64
 	Name        string
 	Description string
+	Type        string
 	Task        task.Tasker
 }
 

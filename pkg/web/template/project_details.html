@@ -21,12 +21,13 @@
               </tr>
             </thead>
             <tbody>
+              {{$projectId := .Project.Id}}
               {{range $suite := .Project.Suites}}
               <tr>
                 <td>{{$suite.Name}}</td>
                 <td>{{$suite.Description}}</td>
                 <td>
-                  <a href="#" class="btn btn-outline-primary btn-sm">Details</a>
+                  <a href="/projects/details/{{$projectId}}/suites/details/{{$suite.Id}}" class="btn btn-outline-primary btn-sm">Details</a>
                   <a href="#" class="btn btn-outline-primary btn-sm">Run all</a>
                 </td>
               </tr>
@@ -37,7 +38,9 @@
                   <table class="table table-sm table-hover table-bordered">
                     <thead>
                       <tr>
+                        <th>Type</th>
                         <th>Name</th>
+                        <th>Description</th>
                         <th></th>
                       </tr>
                     </thead>
@@ -49,7 +52,9 @@
                       </tr>
                       {{range $task := $suite.Tasks}}
                       <tr>
+                        <td><strong>{{$task.Type}}</strong></td>
                         <td>{{$task.Name}}</td>
+                        <td>{{$task.Description}}</td>
                         <td>
                           <a href="#" class="btn btn-outline-primary btn-sm">Run</a>
                           <a href="#" class="btn btn-outline-primary btn-sm">Edit</a>

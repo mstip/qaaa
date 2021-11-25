@@ -55,7 +55,15 @@ Project
 ```
 
 ### Todo
-Data refactoren, with related ids ?
-deep checks mehr asserts für json
-web checks
-ui für tests
+- ui für projekte crud
+- ui für suite crud
+- ui für task crud
+- task create view mit viel hilfe und js und simulation etc
+- web tasks
+- cmd tasks
+- manual tasks
+- deep checks mehr asserts für json
+- Data refactoren, with related ids ?
+- project und suite variablen
+- links, iframes, externe views/details (jira, confluence, bitbucket, github etc...)
+- use https://github.com/thedevsaddam/gojsonq to check json

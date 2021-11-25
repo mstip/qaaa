@@ -26,6 +26,9 @@ func (ws *WebServer) registerRoutes(r *mux.Router) error {
 
 	r.HandleFunc("/projects/details/{projectId}", ws.projectDetail).Methods(http.MethodGet)
 
+	r.HandleFunc("/projects/details/{projectId}/suites/create", ws.suiteCreate).Methods(http.MethodPost)
+	r.HandleFunc("/projects/details/{projectId}/suites/details/{suiteId}", ws.suiteDetail).Methods(http.MethodGet)
+
 	r.HandleFunc("/testruns/list", func(w http.ResponseWriter, r *http.Request) {
 		ws.execTemplate("testruns_list", w, r)
 	}).Methods(http.MethodGet)
@@ -111,5 +114,47 @@ func (ws *WebServer) projectDetail(w http.ResponseWriter, r *http.Request) {
 		Project *model.Project
 	}{
 		Project: project,
+	})
+}
+
+func (ws *WebServer) suiteCreate(w http.ResponseWriter, r *http.Request) {
+	name := r.FormValue("name")
+	Description := r.FormValue("description")
+
+	params := mux.Vars(r)
+	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	project := ws.store.GetProjectById(pId)
+	if project == nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	s := ws.store.CreateSuite(name, Description, project)
+	http.Redirect(w, r, "/projects/details/"+strconv.FormatUint(project.Id, 10)+"/suites/details/"+strconv.FormatUint(s.Id, 10), http.StatusMovedPermanently)
+}
+
+func (ws *WebServer) suiteDetail(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sId, err := strconv.ParseUint(string(params["suiteId"]), 10, 64)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	suite := ws.store.GetSuiteById(sId)
+	if suite == nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	ws.templates["suite_details"].Execute(w, struct {
+		Suite *model.Suite
+	}{
+		Suite: suite,
 	})
 }
