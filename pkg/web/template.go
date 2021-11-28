@@ -2,6 +2,7 @@ package web
 
 import (
 	"html/template"
+	"net/http"
 )
 
 func (ws *WebServer) registerTemplates() error {
@@ -27,4 +28,8 @@ func (ws *WebServer) registerViewTemplate(templateName string) {
 	tmpls := []string{"template/" + templateName + ".html", "template/base.html"}
 	tmpls = append(tmpls, ws.templateComponents...)
 	ws.templates[templateName] = template.Must(template.ParseFS(templateFiles, tmpls...))
+}
+
+func (ws *WebServer) execTemplateHandler(templateName string, w http.ResponseWriter, r *http.Request) {
+	ws.templates[templateName].Execute(w, nil)
 }
