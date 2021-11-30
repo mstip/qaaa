@@ -9,7 +9,7 @@ import (
 	"github.com/mstip/qaaa/pkg/store"
 )
 
-func (ws *WebServer) projectsListController(w http.ResponseWriter, r *http.Request) {
+func projectsListController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	projects := ws.store.GetProjectsList()
 
 	ws.templates["projects_list"].Execute(w, struct {
@@ -19,14 +19,14 @@ func (ws *WebServer) projectsListController(w http.ResponseWriter, r *http.Reque
 	})
 }
 
-func (ws *WebServer) projectCreateController(w http.ResponseWriter, r *http.Request) {
+func projectCreateController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	name := r.FormValue("name")
 	Description := r.FormValue("description")
 	p := ws.store.CreateProject(name, Description)
 	http.Redirect(w, r, "/projects/details/"+strconv.FormatUint(p.Id, 10), http.StatusMovedPermanently)
 }
 
-func (ws *WebServer) projectDetailController(w http.ResponseWriter, r *http.Request) {
+func projectDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	params := mux.Vars(r)
 	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
 

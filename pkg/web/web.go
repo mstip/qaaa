@@ -23,6 +23,7 @@ type WebServer struct {
 	templates          map[string]*template.Template
 	templateComponents []string
 	sessionStore       *sessionStore
+	httpHandler        *mux.Router
 }
 
 func NewWebServer(s *store.Store) (*WebServer, error) {
@@ -36,6 +37,7 @@ func NewWebServer(s *store.Store) (*WebServer, error) {
 		templates:          map[string]*template.Template{},
 		templateComponents: []string{},
 		sessionStore:       st,
+		httpHandler:        mux.NewRouter(),
 	}
 
 	err = ws.registerTemplates()
@@ -43,20 +45,24 @@ func NewWebServer(s *store.Store) (*WebServer, error) {
 		return nil, err
 	}
 
-	r := mux.NewRouter()
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/", http.FileServer(http.FS(staticFiles))))
-	err = ws.registerRoutes(r)
+	// ws.handler = mux.NewRouter()
+	ws.httpHandler.PathPrefix("/static/").Handler(http.StripPrefix("/", http.FileServer(http.FS(staticFiles))))
+	err = ws.registerRoutes(ws.httpHandler)
 	if err != nil {
 		return nil, err
 	}
 
 	ws.srv = &http.Server{
-		Handler:      r,
+		Handler:      ws.httpHandler,
 		Addr:         "0.0.0.0:3000",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
 	return ws, nil
+}
+
+func (ws *WebServer) HttpHandler() http.Handler {
+	return ws.httpHandler
 }
 
 func (ws *WebServer) RunAndServe() {

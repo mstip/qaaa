@@ -21,7 +21,7 @@ func (s *Store) seedWithDemoData() {
 
 	demoSuite := model.Suite{Id: s.newSuiteId(), Name: "Todoapi", Description: "Todo Rest api crud test", Tasks: []model.Task{getTodoTask, getAllTodoTask}}
 
-	demoProject := model.Project{Id: s.newProjectId(), Name: "demo project", Description: "This is the test and demo project", Suites: []model.Suite{demoSuite}}
+	demoProject := model.Project{Id: s.newProjectId(), Name: "demo project 1", Description: "This is the test and demo project", Suites: []model.Suite{demoSuite}}
 
 	s.projects = append(s.projects, demoProject)
 	s.projects = append(s.projects, model.Project{Id: s.newProjectId(), Name: "demo project 2", Description: "This is the test and demo project 2 "})

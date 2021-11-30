@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+const sessionName = "qaaa-session"
+
 type sessionStore struct {
 	session *sessions.CookieStore
 }
@@ -20,7 +22,7 @@ func newSessionStore() (*sessionStore, error) {
 }
 
 func (st *sessionStore) flashes(w http.ResponseWriter, r *http.Request) ([]interface{}, error) {
-	session, err := st.session.Get(r, "qaaa-session")
+	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -34,7 +36,7 @@ func (st *sessionStore) flashes(w http.ResponseWriter, r *http.Request) ([]inter
 }
 
 func (st *sessionStore) addFlash(flash string, w http.ResponseWriter, r *http.Request) error {
-	session, err := st.session.Get(r, "qaaa-session")
+	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -48,7 +50,7 @@ func (st *sessionStore) addFlash(flash string, w http.ResponseWriter, r *http.Re
 }
 
 func (st *sessionStore) authenticate(userId int, w http.ResponseWriter, r *http.Request) error {
-	session, err := st.session.Get(r, "qaaa-session")
+	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -64,7 +66,7 @@ func (st *sessionStore) authenticate(userId int, w http.ResponseWriter, r *http.
 }
 
 func (st *sessionStore) isAuthenticated(r *http.Request) bool {
-	session, err := st.session.Get(r, "qaaa-session")
+	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
 		return false

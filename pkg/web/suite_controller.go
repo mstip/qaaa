@@ -8,7 +8,7 @@ import (
 	"github.com/mstip/qaaa/pkg/model"
 )
 
-func (ws *WebServer) suiteCreateController(w http.ResponseWriter, r *http.Request) {
+func suiteCreateController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	name := r.FormValue("name")
 	Description := r.FormValue("description")
 
@@ -26,10 +26,14 @@ func (ws *WebServer) suiteCreateController(w http.ResponseWriter, r *http.Reques
 	}
 
 	s := ws.store.CreateSuite(name, Description, project)
-	http.Redirect(w, r, "/projects/details/"+strconv.FormatUint(project.Id, 10)+"/suites/details/"+strconv.FormatUint(s.Id, 10), http.StatusMovedPermanently)
+	http.Redirect(
+		w, r,
+		"/projects/details/"+strconv.FormatUint(project.Id, 10)+"/suites/details/"+strconv.FormatUint(s.Id, 10),
+		http.StatusMovedPermanently,
+	)
 }
 
-func (ws *WebServer) suiteDetailController(w http.ResponseWriter, r *http.Request) {
+func suiteDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	params := mux.Vars(r)
 	sId, err := strconv.ParseUint(string(params["suiteId"]), 10, 64)
 
