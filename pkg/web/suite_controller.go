@@ -25,7 +25,7 @@ func suiteCreateController(w http.ResponseWriter, r *http.Request, ws *WebServer
 		return
 	}
 
-	s := ws.store.CreateSuite(name, Description, project)
+	s := ws.store.CreateSuite(name, Description, project.Id)
 	http.Redirect(
 		w, r,
 		"/projects/details/"+strconv.FormatUint(project.Id, 10)+"/suites/details/"+strconv.FormatUint(s.Id, 10),

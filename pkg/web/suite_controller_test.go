@@ -33,15 +33,12 @@ func TestSuiteCreateController(t *testing.T) {
 	url, _ := wr.Result().Location()
 	tutils.EqualS(t, "/projects/details/3/suites/details/1", url.Path, "location")
 
-	p := store.GetProjectById(3)
-	if p == nil {
-		t.Fatal("could not find new project")
-	}
+	suites := store.GetSuitesByProjectId(3)
 
-	tutils.EqualI(t, 1, len(p.Suites), "suites count")
-	tutils.EqualI(t, 1, int(p.Suites[0].Id), "suite id")
-	tutils.EqualS(t, "testsuite", p.Suites[0].Name, "suite name")
-	tutils.EqualS(t, "description of suite", p.Suites[0].Description, "suite description")
+	tutils.EqualI(t, 1, len(suites), "suites count")
+	tutils.EqualI(t, 1, int(suites[0].Id), "suite id")
+	tutils.EqualS(t, "testsuite", suites[0].Name, "suite name")
+	tutils.EqualS(t, "description of suite", suites[0].Description, "suite description")
 }
 
 func TestSuiteDetailController(t *testing.T) {
@@ -70,7 +67,7 @@ func TestSuiteDetailController(t *testing.T) {
 
 		tutils.EqualI(t, tc.expectedStatus, wr.Code, "status code")
 
-		pId, err := strconv.ParseUint(string(tc.suiteId), 10, 64)
+		pId, err := strconv.ParseUint(tc.suiteId, 10, 64)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -98,7 +95,11 @@ func TestSuiteDetailController(t *testing.T) {
 				if i == 0 {
 					return
 				}
-				task := suite.Tasks[i-1]
+				sId, err := strconv.ParseUint(tc.suiteId, 10, 64)
+				if err != nil {
+					t.Fatal(err)
+				}
+				task := store.GetTasksBySuiteId(sId)[i-1]
 				tutils.EqualS(t, task.Type, row.Children().Eq(0).Text(), "task type")
 				tutils.EqualS(t, task.Name, row.Children().Eq(1).Text(), "task name")
 				tutils.EqualS(t, task.Description, row.Children().Eq(2).Text(), "task description")

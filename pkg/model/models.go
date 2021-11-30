@@ -7,28 +7,28 @@ const (
 	TaskTypeWeb     = "web"
 )
 
-type Task struct {
-	Id          uint64
-	Name        string
-	Description string
-	Type        string
-	Task        task.Tasker
-}
-
-type Suite struct {
-	Id          uint64
-	Name        string
-	Description string
-	Tasks       []Task
-	BeforeAll   Task
-	BeforeEach  Task
-	AfterAll    Task
-	AfterEach   Task
-}
-
 type Project struct {
 	Id          uint64
 	Name        string
 	Description string
-	Suites      []Suite
+}
+
+type Suite struct {
+	Id               uint64
+	ProjectId        uint64
+	Name             string
+	Description      string
+	BeforeAllTaskId  uint64
+	BeforeEachTaskId uint64
+	AfterAllTaskId   uint64
+	AfterEachTaskId  uint64
+}
+
+type Task struct {
+	Id          uint64
+	SuiteId     uint64
+	Name        string
+	Description string
+	Type        string
+	Task        task.Tasker
 }

@@ -10,21 +10,27 @@ func (s *Store) newSuiteId() uint64 {
 	return id
 }
 
-func (s *Store) CreateSuite(name string, description string, project *model.Project) *model.Suite {
-	suite := model.Suite{Id: s.newSuiteId(), Name: name, Description: description}
-	project.Suites = append(project.Suites, suite)
+func (s *Store) CreateSuite(name string, description string, projectId uint64) *model.Suite {
+	suite := model.Suite{Id: s.newSuiteId(), Name: name, Description: description, ProjectId: projectId}
+	s.suites = append(s.suites, suite)
 	return &suite
 }
 
 func (s *Store) GetSuiteById(sId uint64) *model.Suite {
-	// TODO: this needs to be refactored
-	for _, p := range s.projects {
-		for _, s := range p.Suites {
-			if s.Id == sId {
-				// TODO: can this leak ?
-				return &s
-			}
+	for _, s := range s.suites {
+		if s.Id == sId {
+			return &s
 		}
 	}
 	return nil
+}
+
+func (s *Store) GetSuitesByProjectId(pId uint64) []model.Suite {
+	suites := []model.Suite{}
+	for _, s := range s.suites {
+		if s.ProjectId == pId {
+			suites = append(suites, s)
+		}
+	}
+	return suites
 }

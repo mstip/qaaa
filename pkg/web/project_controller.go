@@ -6,14 +6,13 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mstip/qaaa/pkg/model"
-	"github.com/mstip/qaaa/pkg/store"
 )
 
 func projectsListController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
-	projects := ws.store.GetProjectsList()
+	projects := ws.store.GetProjects()
 
 	ws.templates["projects_list"].Execute(w, struct {
-		Projects []store.ProjectListData
+		Projects []model.Project
 	}{
 		Projects: projects,
 	})

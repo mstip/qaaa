@@ -130,17 +130,18 @@ func TestProjectDetailController(t *testing.T) {
 
 		doc.Find(".card-body > table > tbody > tr ").Each(
 			func(suiteIndex int, suiteRow *goquery.Selection) {
+				suites := store.GetSuitesByProjectId(project.Id)
 				if suiteIndex%2 == 0 {
 					tutils.EqualS(
 						t,
-						project.Suites[suiteIndex].Name,
+						suites[suiteIndex].Name,
 						suiteRow.Children().Eq(0).Text(),
 						fmt.Sprintf("suite %d name", suiteIndex),
 					)
 
 					tutils.EqualS(
 						t,
-						project.Suites[suiteIndex].Description,
+						suites[suiteIndex].Description,
 						suiteRow.Children().Eq(1).Text(),
 						fmt.Sprintf("suite %d description", suiteIndex),
 					)
@@ -148,7 +149,7 @@ func TestProjectDetailController(t *testing.T) {
 					suiteDetailHref := fmt.Sprintf(
 						"/projects/details/%s/suites/details/%s",
 						tc.projectId,
-						strconv.FormatUint(project.Suites[suiteIndex].Id, 10),
+						strconv.FormatUint(suites[suiteIndex].Id, 10),
 					)
 					href, _ := suiteRow.Find("a").First().Attr("href")
 					tutils.EqualS(t, suiteDetailHref, href, fmt.Sprintf("suite %d link", suiteIndex))
@@ -157,7 +158,7 @@ func TestProjectDetailController(t *testing.T) {
 						if taskIndex == 0 {
 							return
 						}
-						task := project.Suites[suiteIndex-1].Tasks[taskIndex-1]
+						task := store.GetTasksBySuiteId(suites[suiteIndex-1].Id)[taskIndex-1]
 						tutils.EqualS(t, task.Type, taskRow.Children().Eq(0).Text(), "task type")
 						tutils.EqualS(t, task.Name, taskRow.Children().Eq(1).Text(), "task name")
 						tutils.EqualS(t, task.Description, taskRow.Children().Eq(2).Text(), "task description")
