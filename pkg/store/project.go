@@ -34,3 +34,28 @@ func (s *Store) GetProjectById(pId uint64) *model.Project {
 	}
 	return nil
 }
+
+func (s *Store) UpdateProjectById(pId uint64, name string, description string) *model.Project {
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.projects {
+		if v.Id == pId {
+			s.projects[i].Name = name
+			s.projects[i].Description = description
+			return &s.projects[i]
+		}
+	}
+	return nil
+}
+
+func (s *Store) DeleteProjectById(pId uint64) *model.Project {
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.projects {
+		if v.Id == pId {
+			s.projects = append(s.projects[:i], s.projects[i+1:]...)
+			return &v
+		}
+	}
+	return nil
+}
