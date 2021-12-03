@@ -5,7 +5,7 @@ qaaa tool
 ```
 build
 ===
-go build bin/qaaa.exe cmd/main.go
+go build bin/qaaa.exe main.go
 
 test all
 ===
@@ -13,12 +13,17 @@ go test ./... -v
 
 dev
 ===
-go run cmd/main.go
+go run main.go
 
 dev watch
 ===
 https://github.com/cosmtrek/air
 air
+
+go releaser
+===
+https://goreleaser.com/
+go install github.com/goreleaser/goreleaser@latest
 ```
 
 
