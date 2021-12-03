@@ -12,7 +12,7 @@ import (
 )
 
 func TestGetIndex(t *testing.T) {
-	ws, err := NewWebServer(store.NewStore())
+	ws, err := NewWebServer(store.NewStoreWithDemoData())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,7 +35,7 @@ func TestGetIndex(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	ws, err := NewWebServer(store.NewStore())
+	ws, err := NewWebServer(store.NewStoreWithDemoData())
 	if err != nil {
 		log.Fatal(err)
 	}

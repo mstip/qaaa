@@ -14,7 +14,7 @@ import (
 )
 
 func TestSuiteCreateController(t *testing.T) {
-	store := store.NewStore()
+	store := store.NewStoreWithDemoData()
 	ws, err := NewWebServer(store)
 	if err != nil {
 		log.Fatal(err)
@@ -26,7 +26,7 @@ func TestSuiteCreateController(t *testing.T) {
 		map[string]string{"projectId": "3"},
 	)
 
-	suiteCreateController(wr, req, ws)
+	suiteStoreController(wr, req, ws)
 
 	tutils.EqualI(t, http.StatusMovedPermanently, wr.Code, "status code")
 
@@ -42,7 +42,7 @@ func TestSuiteCreateController(t *testing.T) {
 }
 
 func TestSuiteDetailController(t *testing.T) {
-	store := store.NewStore()
+	store := store.NewStoreWithDemoData()
 	ws, err := NewWebServer(store)
 	if err != nil {
 		log.Fatal(err)
@@ -50,18 +50,19 @@ func TestSuiteDetailController(t *testing.T) {
 
 	type test struct {
 		suiteId        string
+		projectId      string
 		expectedStatus int
 	}
 
 	tests := []test{
-		{suiteId: "0", expectedStatus: http.StatusOK},
-		{suiteId: "1337", expectedStatus: http.StatusNotFound},
+		{suiteId: "0", projectId: "0", expectedStatus: http.StatusOK},
+		{suiteId: "1337", projectId: "1337", expectedStatus: http.StatusNotFound},
 	}
 
 	for _, tc := range tests {
 		wr := httptest.NewRecorder()
-		req := httptest.NewRequest(http.MethodGet, "/projects/details/0/suites/details"+tc.suiteId, nil)
-		req = mux.SetURLVars(req, map[string]string{"suiteId": tc.suiteId})
+		req := httptest.NewRequest(http.MethodGet, "/projects/details/"+tc.projectId+"/suites/details"+tc.suiteId, nil)
+		req = mux.SetURLVars(req, map[string]string{"suiteId": tc.suiteId, "projectId": tc.projectId})
 
 		suiteDetailController(wr, req, ws)
 

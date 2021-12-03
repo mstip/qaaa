@@ -9,6 +9,30 @@ import (
 )
 
 func suiteCreateController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
+	params := mux.Vars(r)
+	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	project := ws.store.GetProjectById(pId)
+	if project == nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	ws.templates["suite_create"].Execute(w, struct {
+		Breadcrumb []Breadcrumb
+	}{
+		Breadcrumb: []Breadcrumb{
+			{Name: "Projects", Route: "/projects/list"},
+			{Name: project.Name, Route: "/projects/details/" + params["projectId"]},
+			{Name: "Create New Suite", Route: ""},
+		},
+	})
+}
+func suiteStoreController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	name := r.FormValue("name")
 	Description := r.FormValue("description")
 
@@ -35,6 +59,18 @@ func suiteCreateController(w http.ResponseWriter, r *http.Request, ws *WebServer
 
 func suiteDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	params := mux.Vars(r)
+	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	project := ws.store.GetProjectById(pId)
+	if project == nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
 	sId, err := strconv.ParseUint(string(params["suiteId"]), 10, 64)
 
 	if err != nil {
@@ -48,8 +84,15 @@ func suiteDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer
 	}
 
 	ws.templates["suite_details"].Execute(w, struct {
-		Suite *model.Suite
+		Suite      *model.Suite
+		Breadcrumb []Breadcrumb
 	}{
 		Suite: suite,
+		Breadcrumb: []Breadcrumb{
+			{Name: "Projects", Route: "/projects/list"},
+			{Name: project.Name, Route: "/projects/details/" + params["projectId"]},
+			{Name: "Suites", Route: ""},
+			{Name: suite.Name, Route: ""},
+		},
 	})
 }

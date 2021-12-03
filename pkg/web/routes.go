@@ -16,7 +16,14 @@ func (ws *WebServer) registerRoutes(r *mux.Router) error {
 	}).Methods(http.MethodPost)
 
 	r.HandleFunc("/dashboard", func(w http.ResponseWriter, r *http.Request) {
-		ws.execTemplateHandler("dashboard", w, r)
+		data := struct {
+			Breadcrumb []Breadcrumb
+		}{
+			Breadcrumb: []Breadcrumb{
+				{Name: "Dashboard", Route: ""},
+			},
+		}
+		ws.execTemplateHandler("dashboard", w, r, data)
 	}).Methods(http.MethodGet)
 
 	r.HandleFunc("/projects/list", func(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +31,15 @@ func (ws *WebServer) registerRoutes(r *mux.Router) error {
 	}).Methods(http.MethodGet)
 
 	r.HandleFunc("/projects/create", func(w http.ResponseWriter, r *http.Request) {
-		ws.execTemplateHandler("project_create", w, r)
+		data := struct {
+			Breadcrumb []Breadcrumb
+		}{
+			Breadcrumb: []Breadcrumb{
+				{Name: "Projects", Route: "/projects/list"},
+				{Name: "Create New Project", Route: ""},
+			},
+		}
+		ws.execTemplateHandler("project_create", w, r, data)
 	}).Methods(http.MethodGet)
 
 	r.HandleFunc("/projects/create", func(w http.ResponseWriter, r *http.Request) {
@@ -36,11 +51,11 @@ func (ws *WebServer) registerRoutes(r *mux.Router) error {
 	}).Methods(http.MethodGet)
 
 	r.HandleFunc("/projects/details/{projectId}/suites/create", func(w http.ResponseWriter, r *http.Request) {
-		ws.execTemplateHandler("suite_create", w, r)
+		suiteCreateController(w, r, ws)
 	}).Methods(http.MethodGet)
 
 	r.HandleFunc("/projects/details/{projectId}/suites/create", func(w http.ResponseWriter, r *http.Request) {
-		suiteCreateController(w, r, ws)
+		suiteStoreController(w, r, ws)
 	}).Methods(http.MethodPost)
 
 	r.HandleFunc("/projects/details/{projectId}/suites/details/{suiteId}", func(w http.ResponseWriter, r *http.Request) {
@@ -48,9 +63,17 @@ func (ws *WebServer) registerRoutes(r *mux.Router) error {
 	}).Methods(http.MethodGet)
 
 	r.HandleFunc("/testruns/list", func(w http.ResponseWriter, r *http.Request) {
-		ws.execTemplateHandler("testruns_list", w, r)
+		data := struct {
+			Breadcrumb []Breadcrumb
+		}{
+			Breadcrumb: []Breadcrumb{
+				{Name: "Testruns", Route: ""},
+			},
+		}
+		ws.execTemplateHandler("testruns_list", w, r, data)
 	}).Methods(http.MethodGet)
 
+	r.Use(ws.NoCacheMiddleware)
 	r.Use(ws.authMiddleware)
 
 	return nil

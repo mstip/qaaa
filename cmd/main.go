@@ -9,7 +9,7 @@ import (
 
 func main() {
 	log.Println("qaaa-server is running")
-	store := store.NewStore()
+	store := store.NewStoreWithDemoData()
 	ws, err := web.NewWebServer(store)
 	if err != nil {
 		log.Fatal(err)

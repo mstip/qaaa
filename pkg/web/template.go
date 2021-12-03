@@ -7,6 +7,7 @@ import (
 
 func (ws *WebServer) registerTemplates() error {
 	ws.registerTemplateComponent("navbar")
+	ws.registerTemplateComponent("breadcrumb")
 
 	ws.registerViewTemplate("index")
 	ws.registerViewTemplate("dashboard")
@@ -30,6 +31,6 @@ func (ws *WebServer) registerViewTemplate(templateName string) {
 	ws.templates[templateName] = template.Must(template.ParseFS(templateFiles, tmpls...))
 }
 
-func (ws *WebServer) execTemplateHandler(templateName string, w http.ResponseWriter, r *http.Request) {
-	ws.templates[templateName].Execute(w, nil)
+func (ws *WebServer) execTemplateHandler(templateName string, w http.ResponseWriter, r *http.Request, data interface{}) {
+	ws.templates[templateName].Execute(w, data)
 }

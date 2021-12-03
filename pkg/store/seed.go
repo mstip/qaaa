@@ -6,7 +6,8 @@ import (
 )
 
 func (s *Store) seedWithDemoData() {
-
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
 	arrayLengthCheck := task.JsonCheck{Type: task.JsonTaskTypeArrayLength, Value: 200}
 
 	getAllJsonApiTask, _ := task.NewJsonapiTask("GET", "https://jsonplaceholder.typicode.com/todos", 200, []task.JsonCheck{arrayLengthCheck})

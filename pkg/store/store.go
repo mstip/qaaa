@@ -1,10 +1,14 @@
 package store
 
 import (
+	"sync"
+
 	"github.com/mstip/qaaa/pkg/model"
 )
 
 type Store struct {
+	dataLock      sync.Mutex
+	idLock        sync.Mutex
 	projects      []model.Project
 	suites        []model.Suite
 	tasks         []model.Task
@@ -13,8 +17,13 @@ type Store struct {
 	nextTaskId    uint64
 }
 
-func NewStore() *Store {
+func NewStoreWithDemoData() *Store {
 	s := &Store{}
 	s.seedWithDemoData()
+	return s
+}
+
+func NewStore() *Store {
+	s := &Store{}
 	return s
 }

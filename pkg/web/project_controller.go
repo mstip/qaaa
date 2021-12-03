@@ -10,11 +10,12 @@ import (
 
 func projectsListController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	projects := ws.store.GetProjects()
-
 	ws.templates["projects_list"].Execute(w, struct {
-		Projects []model.Project
+		Projects   []model.Project
+		Breadcrumb []Breadcrumb
 	}{
-		Projects: projects,
+		Projects:   projects,
+		Breadcrumb: []Breadcrumb{{Name: "Projects", Route: ""}},
 	})
 }
 
@@ -39,9 +40,18 @@ func projectDetailController(w http.ResponseWriter, r *http.Request, ws *WebServ
 		return
 	}
 
+	suites := ws.store.GetSuitesByProjectId(pId)
+
 	ws.templates["project_details"].Execute(w, struct {
-		Project *model.Project
+		Project    *model.Project
+		Suites     []model.Suite
+		Breadcrumb []Breadcrumb
 	}{
 		Project: project,
+		Suites:  suites,
+		Breadcrumb: []Breadcrumb{
+			{Name: "Projects", Route: "/projects/list"},
+			{Name: project.Name, Route: ""},
+		},
 	})
 }

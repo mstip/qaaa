@@ -16,7 +16,7 @@ import (
 )
 
 func TestProjectsListController(t *testing.T) {
-	ws, err := NewWebServer(store.NewStore())
+	ws, err := NewWebServer(store.NewStoreWithDemoData())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -52,7 +52,7 @@ func TestProjectsListController(t *testing.T) {
 }
 
 func TestProjectCreateController(t *testing.T) {
-	store := store.NewStore()
+	store := store.NewStoreWithDemoData()
 	ws, err := NewWebServer(store)
 	if err != nil {
 		log.Fatal(err)
@@ -79,7 +79,7 @@ func TestProjectCreateController(t *testing.T) {
 }
 
 func TestProjectDetailController(t *testing.T) {
-	store := store.NewStore()
+	store := store.NewStoreWithDemoData()
 	ws, err := NewWebServer(store)
 	if err != nil {
 		log.Fatal(err)
@@ -128,9 +128,11 @@ func TestProjectDetailController(t *testing.T) {
 		tutils.EqualS(t, project.Name, doc.Find("h4.card-title").First().Text(), "project title")
 		tutils.EqualS(t, project.Description, doc.Find(".card p").First().Text(), "project title")
 
+		suites := store.GetSuitesByProjectId(project.Id)
+		tutils.EqualI(t, len(suites), doc.Find(".card-body > table > tbody > tr.suite-row ").Length(), "project suites count")
+
 		doc.Find(".card-body > table > tbody > tr ").Each(
 			func(suiteIndex int, suiteRow *goquery.Selection) {
-				suites := store.GetSuitesByProjectId(project.Id)
 				if suiteIndex%2 == 0 {
 					tutils.EqualS(
 						t,

@@ -1,0 +1,19 @@
+{{define "breadcrumb"}}
+<div class="container mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {{range $v := .}}
+            {{if eq $v.Route ""}}
+            <li class="breadcrumb-item active">
+                {{$v.Name}}
+            </li>
+            {{else}}
+            <li class="breadcrumb-item">
+                <a href="{{$v.Route}}">{{$v.Name}}</a>
+            </li>
+            {{end}}
+            {{end}}
+        </ol>
+    </nav>
+</div>
+{{end}}
