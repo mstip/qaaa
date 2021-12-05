@@ -1,6 +1,7 @@
 package web
 
 import (
+	"encoding/gob"
 	"log"
 	"net/http"
 
@@ -14,6 +15,7 @@ type sessionStore struct {
 }
 
 func newSessionStore() (*sessionStore, error) {
+	gob.Register(Flash{})
 	st := &sessionStore{
 		session: sessions.NewCookieStore([]byte("sup3r4sEcRETT!!!")),
 	}
@@ -21,27 +23,32 @@ func newSessionStore() (*sessionStore, error) {
 	return st, nil
 }
 
-func (st *sessionStore) flashes(w http.ResponseWriter, r *http.Request) ([]interface{}, error) {
+func (st *sessionStore) Flashes(w http.ResponseWriter, r *http.Request) ([]Flash, error) {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	flashes := session.Flashes()
+	rawFlashes := session.Flashes()
 	err = session.Save(r, w)
 	if err != nil {
 		return nil, err
 	}
-	return flashes, nil
+
+	f := []Flash{}
+	for _, rawFlash := range rawFlashes {
+		f = append(f, rawFlash.(Flash))
+	}
+	return f, nil
 }
 
-func (st *sessionStore) addFlash(flash string, w http.ResponseWriter, r *http.Request) error {
+func (st *sessionStore) AddFlash(text string, color string, w http.ResponseWriter, r *http.Request) error {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-	session.AddFlash(flash)
+	session.AddFlash(Flash{Text: text, Color: color})
 	err = session.Save(r, w)
 	if err != nil {
 		return err
@@ -49,7 +56,7 @@ func (st *sessionStore) addFlash(flash string, w http.ResponseWriter, r *http.Re
 	return nil
 }
 
-func (st *sessionStore) authenticate(userId int, w http.ResponseWriter, r *http.Request) error {
+func (st *sessionStore) Authenticate(userId int, w http.ResponseWriter, r *http.Request) error {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
@@ -65,7 +72,7 @@ func (st *sessionStore) authenticate(userId int, w http.ResponseWriter, r *http.
 	return nil
 }
 
-func (st *sessionStore) isAuthenticated(r *http.Request) bool {
+func (st *sessionStore) IsAuthenticated(r *http.Request) bool {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)

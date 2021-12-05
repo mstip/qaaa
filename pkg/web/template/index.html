@@ -1,13 +1,8 @@
 {{template "base" .}}
 {{define "main"}}
 {{template "navbar" true}}
+{{template "flashes" .}}
 <div class="container mt-3">
-  {{if .Flashes}}
-  {{range $flash := .Flashes}}
-  <div class="alert alert-danger" role="alert">{{$flash}}</div>
-  {{end}}
-  {{end}}
-
   <div class="row">
     <div class="col">
       <div class="card">

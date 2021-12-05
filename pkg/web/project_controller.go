@@ -4,17 +4,23 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
 	"github.com/mstip/qaaa/pkg/model"
 )
 
 func projectsListController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
+	flashes, err := ws.sessionStore.Flashes(w, r)
+	if err != nil {
+		errorResponse(w, err)
+		return
+	}
 	projects := ws.store.GetProjects()
 	ws.templates["projects_list"].Execute(w, struct {
 		Projects   []model.Project
+		Flashes    []Flash
 		Breadcrumb []Breadcrumb
 	}{
 		Projects:   projects,
+		Flashes:    flashes,
 		Breadcrumb: []Breadcrumb{{Name: "Projects", Route: ""}},
 	})
 }
@@ -27,11 +33,9 @@ func projectCreateController(w http.ResponseWriter, r *http.Request, ws *WebServ
 }
 
 func projectDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
-	params := mux.Vars(r)
-	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
-
+	pId, err := getRouteParamAsUint64(r, "projectId")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		errorResponse(w, err)
 		return
 	}
 	project := ws.store.GetProjectById(pId)
@@ -54,4 +58,24 @@ func projectDetailController(w http.ResponseWriter, r *http.Request, ws *WebServ
 			{Name: project.Name, Route: ""},
 		},
 	})
+}
+
+func projectDeleteController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
+	pId, err := getRouteParamAsUint64(r, "projectId")
+	if err != nil {
+		errorResponse(w, err)
+		return
+	}
+
+	if p := ws.store.DeleteProjectById(pId); p == nil {
+		http.Error(w, "Not found", http.StatusNotFound)
+		return
+	}
+
+	if err = ws.sessionStore.AddFlash("Project was deleted", "success", w, r); err != nil {
+		errorResponse(w, err)
+		return
+	}
+
+	http.Redirect(w, r, "/projects/list", http.StatusMovedPermanently)
 }

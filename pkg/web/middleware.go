@@ -12,8 +12,8 @@ func (ws *WebServer) authMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		if !ws.sessionStore.isAuthenticated(r) {
-			err := ws.sessionStore.addFlash("please login", w, r)
+		if !ws.sessionStore.IsAuthenticated(r) {
+			err := ws.sessionStore.AddFlash("please login", "danger", w, r)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

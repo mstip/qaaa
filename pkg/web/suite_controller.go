@@ -10,10 +10,9 @@ import (
 
 func suiteCreateController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	params := mux.Vars(r)
-	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
-
+	pId, err := getRouteParamAsUint64(r, "projectId")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		errorResponse(w, err)
 		return
 	}
 	project := ws.store.GetProjectById(pId)
@@ -36,13 +35,12 @@ func suiteStoreController(w http.ResponseWriter, r *http.Request, ws *WebServer)
 	name := r.FormValue("name")
 	Description := r.FormValue("description")
 
-	params := mux.Vars(r)
-	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
-
+	pId, err := getRouteParamAsUint64(r, "projectId")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		errorResponse(w, err)
 		return
 	}
+
 	project := ws.store.GetProjectById(pId)
 	if project == nil {
 		http.Error(w, "Not found", http.StatusNotFound)
@@ -59,10 +57,9 @@ func suiteStoreController(w http.ResponseWriter, r *http.Request, ws *WebServer)
 
 func suiteDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	params := mux.Vars(r)
-	pId, err := strconv.ParseUint(string(params["projectId"]), 10, 64)
-
+	pId, err := getRouteParamAsUint64(r, "projectId")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		errorResponse(w, err)
 		return
 	}
 	project := ws.store.GetProjectById(pId)
@@ -71,12 +68,12 @@ func suiteDetailController(w http.ResponseWriter, r *http.Request, ws *WebServer
 		return
 	}
 
-	sId, err := strconv.ParseUint(string(params["suiteId"]), 10, 64)
-
+	sId, err := getRouteParamAsUint64(r, "suiteId")
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		errorResponse(w, err)
 		return
 	}
+
 	suite := ws.store.GetSuiteById(sId)
 	if suite == nil {
 		http.Error(w, "Not found", http.StatusNotFound)

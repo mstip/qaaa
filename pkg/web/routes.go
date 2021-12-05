@@ -50,6 +50,10 @@ func (ws *WebServer) registerRoutes(r *mux.Router) error {
 		projectDetailController(w, r, ws)
 	}).Methods(http.MethodGet)
 
+	r.HandleFunc("/projects/details/{projectId}/delete", func(w http.ResponseWriter, r *http.Request) {
+		projectDeleteController(w, r, ws)
+	}).Methods(http.MethodPost)
+
 	r.HandleFunc("/projects/details/{projectId}/suites/create", func(w http.ResponseWriter, r *http.Request) {
 		suiteCreateController(w, r, ws)
 	}).Methods(http.MethodGet)

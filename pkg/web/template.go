@@ -8,6 +8,7 @@ import (
 func (ws *WebServer) registerTemplates() error {
 	ws.registerTemplateComponent("navbar")
 	ws.registerTemplateComponent("breadcrumb")
+	ws.registerTemplateComponent("flashes")
 
 	ws.registerViewTemplate("index")
 	ws.registerViewTemplate("dashboard")

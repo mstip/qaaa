@@ -1,0 +1,7 @@
+{{define "flashes"}}
+    {{if .Flashes}}
+        {{range $flash := .Flashes}}
+        <div class="alert alert-{{$flash.Color}}" role="alert">{{$flash.Text}}</div>
+        {{end}}
+    {{end}}
+{{end}}

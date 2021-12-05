@@ -6,14 +6,14 @@ import (
 )
 
 func indexController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
-	flashes, err := ws.sessionStore.flashes(w, r)
+	flashes, err := ws.sessionStore.Flashes(w, r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	ws.templates["index"].Execute(w, struct {
-		Flashes []interface{}
+		Flashes []Flash
 	}{
 		Flashes: flashes,
 	})
@@ -26,7 +26,7 @@ func loginController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 	log.Println("hier", username, password)
 
 	if username == "admin" && password == "admin" {
-		err := ws.sessionStore.authenticate(1, w, r)
+		err := ws.sessionStore.Authenticate(1, w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -35,7 +35,7 @@ func loginController(w http.ResponseWriter, r *http.Request, ws *WebServer) {
 		return
 	}
 
-	err := ws.sessionStore.addFlash("invalid credentials", w, r)
+	err := ws.sessionStore.AddFlash("invalid credentials", "danger", w, r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -7,12 +7,40 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">{{.Project.Name}}</h4>
+          <h3 class="card-title">{{.Project.Name}}</h4>
           <p>{{.Project.Description}}</p>
+          <hr>
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-2">
+                <div class="d-grid">
+                  <a href="#" class="btn btn-primary">Run all tests</a>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="d-grid">
+                  <a class="btn btn-primary" href="/projects/details/{{.Project.Id}}/edit">Edit</a>
+                </div>
+              </div>
+              <div class="col-2">
+                <div class="d-grid">
+                  <a href="/projects/details/{{.Project.Id}}/suites/create" class="btn btn-primary">Create New
+                    Testsuite</a>
+                </div>
+              </div>
+              <div class="col-2">
+                <form action="/projects/details/{{.Project.Id}}/delete" method="post"
+                  onsubmit="return confirm('Do you really want to delete this project');">
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
           <hr />
-          <h5>Testsuites</h5>
-          <a href="/projects/details/{{.Project.Id}}/suites/create" class="btn btn-primary">Create New Testsuite</a>
-          <a href="#" class="btn btn-primary">Run all tests</a>
+          <h4>Testsuites</h5>
+
           <table class="table table-sm table-bordered mt-3">
             <thead>
               <tr>
@@ -28,11 +56,12 @@
                 <td>{{$suite.Name}}</td>
                 <td>{{$suite.Description}}</td>
                 <td>
-                  <a href="/projects/details/{{$projectId}}/suites/details/{{$suite.Id}}" class="btn btn-outline-primary btn-sm">Details</a>
+                  <a href="/projects/details/{{$projectId}}/suites/details/{{$suite.Id}}"
+                    class="btn btn-outline-primary btn-sm">Details</a>
                   <a href="#" class="btn btn-outline-primary btn-sm">Run all</a>
                 </td>
               </tr>
-              
+
               <tr class="task-row">
                 <td></td>
                 <td colspan="2">

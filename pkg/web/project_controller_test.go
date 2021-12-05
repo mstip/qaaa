@@ -125,8 +125,8 @@ func TestProjectDetailController(t *testing.T) {
 			t.Error(err)
 		}
 
-		tutils.EqualS(t, project.Name, doc.Find("h4.card-title").First().Text(), "project title")
-		tutils.EqualS(t, project.Description, doc.Find(".card p").First().Text(), "project title")
+		tutils.EqualS(t, project.Name, doc.Find("h3.card-title").First().Text(), "project title")
+		tutils.EqualS(t, project.Description, doc.Find(".card p").First().Text(), "project description")
 
 		suites := store.GetSuitesByProjectId(project.Id)
 		tutils.EqualI(t, len(suites), doc.Find(".card-body > table > tbody > tr.suite-row ").Length(), "project suites count")
