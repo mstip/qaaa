@@ -13,7 +13,7 @@ func (ws *WebServer) registerTemplates() error {
 	ws.registerViewTemplate("index")
 	ws.registerViewTemplate("dashboard")
 	ws.registerViewTemplate("projects_list")
-	ws.registerViewTemplate("project_create")
+	ws.registerViewTemplate("project_form")
 	ws.registerViewTemplate("project_details")
 	ws.registerViewTemplate("testruns_list")
 	ws.registerViewTemplate("suite_create")

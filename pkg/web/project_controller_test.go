@@ -51,7 +51,7 @@ func TestProjectsListController(t *testing.T) {
 	})
 }
 
-func TestProjectCreateController(t *testing.T) {
+func TestProjectStoreController(t *testing.T) {
 	store := store.NewStoreWithDemoData()
 	ws, err := NewWebServer(store)
 	if err != nil {
@@ -61,7 +61,7 @@ func TestProjectCreateController(t *testing.T) {
 
 	req := tutils.FormPost(map[string]string{"name": "testproject", "description": "description of proj"}, nil)
 
-	projectCreateController(wr, req, ws)
+	projectStoreController(wr, req, ws)
 
 	tutils.EqualI(t, http.StatusMovedPermanently, wr.Code, "status code")
 
