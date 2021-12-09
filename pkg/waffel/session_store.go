@@ -1,4 +1,4 @@
-package web
+package waffel
 
 import (
 	"encoding/gob"
@@ -8,22 +8,27 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+type Flash struct {
+	Text  string
+	Color string
+}
+
 const sessionName = "qaaa-session"
 
-type sessionStore struct {
+type Session struct {
 	session *sessions.CookieStore
 }
 
-func newSessionStore() (*sessionStore, error) {
+func newSession() (*Session, error) {
 	gob.Register(Flash{})
-	st := &sessionStore{
+	st := &Session{
 		session: sessions.NewCookieStore([]byte("sup3r4sEcRETT!!!")),
 	}
 
 	return st, nil
 }
 
-func (st *sessionStore) Flashes(w http.ResponseWriter, r *http.Request) ([]Flash, error) {
+func (st *Session) Flashes(w http.ResponseWriter, r *http.Request) ([]Flash, error) {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
@@ -42,7 +47,7 @@ func (st *sessionStore) Flashes(w http.ResponseWriter, r *http.Request) ([]Flash
 	return f, nil
 }
 
-func (st *sessionStore) AddFlash(text string, color string, w http.ResponseWriter, r *http.Request) error {
+func (st *Session) AddFlash(text string, color string, w http.ResponseWriter, r *http.Request) error {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
@@ -56,7 +61,7 @@ func (st *sessionStore) AddFlash(text string, color string, w http.ResponseWrite
 	return nil
 }
 
-func (st *sessionStore) Authenticate(userId int, w http.ResponseWriter, r *http.Request) error {
+func (st *Session) Authenticate(userId int, w http.ResponseWriter, r *http.Request) error {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)
@@ -72,7 +77,7 @@ func (st *sessionStore) Authenticate(userId int, w http.ResponseWriter, r *http.
 	return nil
 }
 
-func (st *sessionStore) IsAuthenticated(r *http.Request) bool {
+func (st *Session) IsAuthenticated(r *http.Request) bool {
 	session, err := st.session.Get(r, sessionName)
 	if err != nil {
 		log.Println(err)

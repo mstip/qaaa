@@ -1,26 +1,19 @@
 package web
 
 import (
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/mstip/qaaa/internal/tutils"
-	"github.com/mstip/qaaa/pkg/store"
 )
 
 func TestGetIndex(t *testing.T) {
-	ws, err := NewWebServer(store.NewStoreWithDemoData())
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	wr := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 
-	indexController(wr, req, ws)
+	indexController(wr, req, CreateWaffel())
 
 	tutils.EqualI(t, http.StatusOK, wr.Code, "status code")
 
@@ -35,11 +28,6 @@ func TestGetIndex(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	ws, err := NewWebServer(store.NewStoreWithDemoData())
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	type test struct {
 		username     string
 		password     string
@@ -57,7 +45,7 @@ func TestLogin(t *testing.T) {
 		wr := httptest.NewRecorder()
 		req := tutils.FormPost(map[string]string{"username": tc.username, "password": tc.password}, nil)
 
-		loginController(wr, req, ws)
+		loginController(wr, req, CreateWaffel())
 
 		tutils.EqualI(t, tc.statusCode, wr.Code, "status code")
 

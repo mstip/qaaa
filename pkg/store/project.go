@@ -1,6 +1,10 @@
 package store
 
-import "github.com/mstip/qaaa/pkg/model"
+import (
+	"strconv"
+
+	"github.com/mstip/qaaa/pkg/model"
+)
 
 func (s *Store) newProjectId() uint64 {
 	s.idLock.Lock()
@@ -30,6 +34,25 @@ func (s *Store) GetProjectById(pId uint64) *model.Project {
 	for _, v := range s.projects {
 		if v.Id == pId {
 			return &v
+		}
+	}
+	return nil
+}
+
+func (s *Store) UpdateProjectByIdParam(idParam string, name string, description string) *model.Project {
+	pId, err := strconv.ParseUint(idParam, 10, 64)
+
+	if err != nil {
+		return nil
+	}
+
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.projects {
+		if v.Id == pId {
+			s.projects[i].Name = name
+			s.projects[i].Description = description
+			return &s.projects[i]
 		}
 	}
 	return nil

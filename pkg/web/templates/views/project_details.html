@@ -19,17 +19,17 @@
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a class="btn btn-primary" href="/projects/details/{{.Project.Id}}/edit">Edit</a>
+                  <a class="btn btn-primary" href="/project/detail/{{.Project.Id}}/edit">Edit</a>
                 </div>
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a href="/projects/details/{{.Project.Id}}/suites/create" class="btn btn-primary">Create New
+                  <a href="/project/detail/{{.Project.Id}}/suites/create" class="btn btn-primary">Create New
                     Testsuite</a>
                 </div>
               </div>
               <div class="col-2">
-                <form action="/projects/details/{{.Project.Id}}/delete" method="post"
+                <form action="/project/detail/{{.Project.Id}}/delete" method="post"
                   onsubmit="return confirm('Do you really want to delete this project');">
                   <div class="d-grid">
                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -51,12 +51,13 @@
             </thead>
             <tbody>
               {{$projectId := .Project.Id}}
+              {{$tasksBySuiteId := .TasksBySuiteId}}
               {{range $suite := .Suites}}
               <tr class="suite-row">
                 <td>{{$suite.Name}}</td>
                 <td>{{$suite.Description}}</td>
                 <td>
-                  <a href="/projects/details/{{$projectId}}/suites/details/{{$suite.Id}}"
+                  <a href="/project/detail/{{$projectId}}/suites/details/{{$suite.Id}}"
                     class="btn btn-outline-primary btn-sm">Details</a>
                   <a href="#" class="btn btn-outline-primary btn-sm">Run all</a>
                 </td>
@@ -80,7 +81,7 @@
                           <button class="btn btn-primary btn-sm">Create new test</button>
                         </td>
                       </tr>
-                      {{range $task := $suite.Tasks}}
+                      {{range $task := index $tasksBySuiteId $suite.Id}}
                       <tr>
                         <td><strong>{{$task.Type}}</strong></td>
                         <td>{{$task.Name}}</td>
