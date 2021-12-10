@@ -41,21 +41,11 @@ func (s *Store) GetProjectById(pId uint64) *model.Project {
 
 func (s *Store) UpdateProjectByIdParam(idParam string, name string, description string) *model.Project {
 	pId, err := strconv.ParseUint(idParam, 10, 64)
-
 	if err != nil {
 		return nil
 	}
 
-	s.dataLock.Lock()
-	defer s.dataLock.Unlock()
-	for i, v := range s.projects {
-		if v.Id == pId {
-			s.projects[i].Name = name
-			s.projects[i].Description = description
-			return &s.projects[i]
-		}
-	}
-	return nil
+	return s.UpdateProjectById(pId, name, description)
 }
 
 func (s *Store) UpdateProjectById(pId uint64, name string, description string) *model.Project {

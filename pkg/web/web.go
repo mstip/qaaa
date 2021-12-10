@@ -32,6 +32,9 @@ func CreateWaffel() *waffel.Waffel {
 		{Name: "suiteCreate", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/create", Handler: suiteCreateController},
 		{Name: "suiteStore", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/store", Handler: suiteStoreController},
 		{Name: "suiteDetail", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}", Handler: suiteDetailController},
+		{Name: "suiteEdit", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/edit", Handler: suiteEditController},
+		{Name: "suiteUpdate", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/update", Handler: suiteUpdateController},
+		{Name: "suiteDelete", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/delete", Handler: suiteDeleteController},
 	}
 
 	middlewares := []waffel.Middleware{

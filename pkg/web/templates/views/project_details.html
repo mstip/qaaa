@@ -19,17 +19,17 @@
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a class="btn btn-primary" href="/project/detail/{{.Project.Id}}/edit">Edit</a>
+                  <a class="btn btn-primary" href="{{GetUrlForRouteUInt64 "projectEdit" .Project.Id}}">Edit</a>
                 </div>
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a href="/project/detail/{{.Project.Id}}/suite/create" class="btn btn-primary">Create New
+                  <a href="{{GetUrlForRouteUInt64 "suiteCreate" .Project.Id}}" class="btn btn-primary">Create New
                     Testsuite</a>
                 </div>
               </div>
               <div class="col-2">
-                <form action="/project/detail/{{.Project.Id}}/delete" method="post"
+                <form action="{{GetUrlForRouteUInt64 "projectDelete" .Project.Id}}" method="post"
                   onsubmit="return confirm('Do you really want to delete this project');">
                   <div class="d-grid">
                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -57,7 +57,7 @@
                 <td>{{$suite.Name}}</td>
                 <td>{{$suite.Description}}</td>
                 <td>
-                  <a href="/project/detail/{{$projectId}}/suite/detail/{{$suite.Id}}"
+                  <a href="{{GetUrlForRouteUInt64 "suiteDetail" $projectId $suite.Id}}"
                     class="btn btn-outline-primary btn-sm">Details</a>
                   <a href="#" class="btn btn-outline-primary btn-sm">Run all</a>
                 </td>

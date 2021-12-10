@@ -9,7 +9,7 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Projects</h4>
-          <a href="/project/create" class="btn btn-primary">Create New Project</a>
+          <a href="{{GetUrlForRoute "projectList"}}" class="btn btn-primary">Create New Project</a>
           <table class="table table-sm table-bordered table-hover mt-3">
             <thead>
               <tr>
@@ -24,7 +24,7 @@
                 <td>{{$project.Name}}</td>
                 <td>{{$project.Description}}</td>
                 <td>
-                  <a href="/project/detail/{{$project.Id}}" class="btn btn-outline-primary btn-sm">Details</a>
+                  <a href="{{GetUrlForRouteUInt64 "projectDetail" $project.Id}}" class="btn btn-outline-primary btn-sm">Details</a>
                 </td>
               </tr>
               {{end}}

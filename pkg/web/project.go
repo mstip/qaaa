@@ -28,7 +28,7 @@ func projectsListController(wr http.ResponseWriter, r *http.Request, wf *waffel.
 func projectCreateController(wr http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {
 	wf.Render(wr, r, "project_form", map[string]interface{}{
 		"Breadcrumb": []Breadcrumb{
-			{Name: "Projects", Route: "/project/list"},
+			{Name: "Projects", Route: wf.GetUrlForRoute("projectList")},
 			{Name: "Create New Project", Route: ""},
 		},
 		"Form": ProjectForm{
@@ -64,7 +64,7 @@ func projectDetailController(wr http.ResponseWriter, r *http.Request, wf *waffel
 		"Suites":         suites,
 		"TasksBySuiteId": tasksBySuiteId,
 		"Breadcrumb": []Breadcrumb{
-			{Name: "Projects", Route: "/project/list"},
+			{Name: "Projects", Route: wf.GetUrlForRoute("projectList")},
 			{Name: project.Name, Route: ""},
 		},
 	})
@@ -112,12 +112,12 @@ func projectEditController(wr http.ResponseWriter, r *http.Request, wf *waffel.W
 
 	wf.Render(wr, r, "project_form", map[string]interface{}{
 		"Breadcrumb": []Breadcrumb{
-			{Name: "Projects", Route: "/project/list"},
-			{Name: project.Name, Route: "/project/detail/" + params["url_projectId"]},
+			{Name: "Projects", Route: wf.GetUrlForRoute("projectList")},
+			{Name: project.Name, Route: wf.GetUrlForRoute("projectDetail", params["url_projectId"])},
 			{Name: "Edit", Route: ""},
 		},
 		"Form": ProjectForm{
-			Title:       "Update " + project.Name,
+			Title:       "Edit " + project.Name,
 			Action:      "/project/detail/" + params["url_projectId"] + "/update",
 			Name:        project.Name,
 			Description: project.Description,

@@ -19,7 +19,7 @@
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a class="btn btn-primary" href="/project/detail/{{.Suite.ProjectId}}/suite/detail/{{.Suite.Id}}/edit">Edit</a>
+                  <a class="btn btn-primary" href="{{GetUrlForRouteUInt64 "suiteEdit" .Suite.ProjectId .Suite.Id }}">Edit</a>
                 </div>
               </div>
               <div class="col-2">
@@ -29,7 +29,7 @@
                 </div>
               </div>
               <div class="col-2">
-                <form action="/project/detail/{{.Suite.ProjectId}}/suite/detail/{{.Suite.Id}}/delete" method="POST"
+                <form action="{{GetUrlForRouteUInt64 "suiteDelete" .Suite.ProjectId .Suite.Id }}" method="POST"
                   onsubmit="return confirm('Do you really want to delete this suite');">
                   <div class="d-grid">
                     <button type="submit" class="btn btn-danger">Delete</button>

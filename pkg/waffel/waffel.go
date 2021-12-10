@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -151,6 +152,31 @@ func (wf *Waffel) GetUrlForRoute(name string, params ...string) string {
 	return ""
 }
 
+func (wf *Waffel) GetUrlForRouteUInt64(name string, params ...uint64) string {
+	for _, route := range wf.routes {
+		if route.Name == name {
+			if strings.Contains(route.Url, "{") {
+				re := regexp.MustCompile(`\{[a-zA-Z]+\}`)
+				s := re.ReplaceAllString(route.Url, `%s`)
+
+				vals := []interface{}{}
+				for _, p := range params {
+					vals = append(vals, strconv.FormatUint(p, 10))
+				}
+
+				return fmt.Sprintf(s, vals...)
+			}
+
+			return route.Url
+		}
+	}
+	return ""
+}
+
+func (wf *Waffel) RedirectToRoute(w http.ResponseWriter, r *http.Request, routeName string, params ...string) {
+	http.Redirect(w, r, wf.GetUrlForRoute(routeName, params...), http.StatusMovedPermanently)
+}
+
 func (wf *Waffel) registerRoutes() error {
 	for _, route := range wf.routes {
 		route := route
@@ -190,13 +216,21 @@ func (wf *Waffel) registerTemplates(templateFiles embed.FS) error {
 		return err
 	}
 
+	funcMap := template.FuncMap{
+		"GetUrlForRoute":       wf.GetUrlForRoute,
+		"GetUrlForRouteUInt64": wf.GetUrlForRouteUInt64,
+	}
+
 	for _, vf := range viewFiles {
 		tmpls := []string{"templates/views/" + vf.Name(), "templates/base.html"}
 		tmpls = append(tmpls, templateComponents...)
 
 		tmplKey := vf.Name()[:strings.LastIndex(vf.Name(), ".")]
 
-		wf.templates[tmplKey] = template.Must(template.ParseFS(templateFiles, tmpls...))
+		wf.templates[tmplKey], err = template.New("base").Funcs(funcMap).ParseFS(templateFiles, tmpls...)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	return nil

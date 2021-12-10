@@ -1,6 +1,8 @@
 package store
 
 import (
+	"strconv"
+
 	"github.com/mstip/qaaa/pkg/model"
 )
 
@@ -47,4 +49,45 @@ func (s *Store) GetSuitesByProjectId(pId uint64) []model.Suite {
 		}
 	}
 	return suites
+}
+
+func (s *Store) UpdateSuiteByIdParam(idParam string, name string, description string) *model.Suite {
+	sId, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return nil
+	}
+
+	return s.UpdateSuiteById(sId, name, description)
+}
+
+func (s *Store) UpdateSuiteById(sId uint64, name string, description string) *model.Suite {
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.suites {
+		if v.Id == sId {
+			s.suites[i].Name = name
+			s.suites[i].Description = description
+			return &s.suites[i]
+		}
+	}
+	return nil
+}
+func (s *Store) DeleteSuiteByIdParm(idParam string) *model.Suite {
+	sId, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return nil
+	}
+	return s.DeleteSuiteById(sId)
+}
+
+func (s *Store) DeleteSuiteById(sId uint64) *model.Suite {
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.suites {
+		if v.Id == sId {
+			s.suites = append(s.suites[:i], s.suites[i+1:]...)
+			return &v
+		}
+	}
+	return nil
 }
