@@ -19,7 +19,7 @@
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a class="btn btn-primary" href="/projects/details/{{.Suite.ProjectId}}/suites/details/{{.Suite.Id}}/edit">Edit</a>
+                  <a class="btn btn-primary" href="/project/detail/{{.Suite.ProjectId}}/suite/detail/{{.Suite.Id}}/edit">Edit</a>
                 </div>
               </div>
               <div class="col-2">
@@ -29,7 +29,7 @@
                 </div>
               </div>
               <div class="col-2">
-                <form action="/projects/details/{{.Suite.ProjectId}}/suites/details/{{.Suite.Id}}/delete" method="POST"
+                <form action="/project/detail/{{.Suite.ProjectId}}/suite/detail/{{.Suite.Id}}/delete" method="POST"
                   onsubmit="return confirm('Do you really want to delete this suite');">
                   <div class="d-grid">
                     <button type="submit" class="btn btn-danger">Delete</button>
@@ -55,7 +55,7 @@
                   <button class="btn btn-primary btn-sm">Create new task</button>
                 </td>
               </tr>
-              {{range $task := .Suite.Tasks}}
+              {{range $task := .Tasks}}
               <tr>
                 <td><strong>{{$task.Type}}</strong></td>
                 <td>{{$task.Name}}</td>

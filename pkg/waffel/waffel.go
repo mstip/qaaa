@@ -3,9 +3,11 @@ package waffel
 import (
 	"embed"
 	"errors"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -51,8 +53,11 @@ func NewWaffel(addr string, routes []Route, middlewares []Middleware, staticFile
 		templates:   map[string]*template.Template{},
 	}
 	// templates
-	if err = waffel.registerTemplates(templateFiles); err != nil {
-		return nil, err
+
+	if fs, err := templateFiles.ReadDir("."); err == nil && len(fs) > 0 {
+		if err = waffel.registerTemplates(templateFiles); err != nil {
+			return nil, err
+		}
 	}
 
 	// routes
@@ -125,9 +130,21 @@ func (wf *Waffel) Render(wr http.ResponseWriter, r *http.Request, tmplName strin
 	}
 }
 
-func (wf *Waffel) GetUrlForRoute(name string) string {
+func (wf *Waffel) GetUrlForRoute(name string, params ...string) string {
 	for _, route := range wf.routes {
 		if route.Name == name {
+			if strings.Contains(route.Url, "{") {
+				re := regexp.MustCompile(`\{[a-zA-Z]+\}`)
+				s := re.ReplaceAllString(route.Url, `%s`)
+
+				vals := []interface{}{}
+				for _, p := range params {
+					vals = append(vals, p)
+				}
+
+				return fmt.Sprintf(s, vals...)
+			}
+
 			return route.Url
 		}
 	}

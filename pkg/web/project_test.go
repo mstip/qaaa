@@ -84,7 +84,7 @@ func TestProjectDetailController(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.desc, func(t *testing.T) {
 			wr := httptest.NewRecorder()
-			req := httptest.NewRequest(http.MethodGet, "/projects/details/"+tc.projectId, nil)
+			req := httptest.NewRequest(http.MethodGet, "/project/detail/"+tc.projectId, nil)
 			req = mux.SetURLVars(req, map[string]string{"projectId": tc.projectId})
 
 			projectDetailController(wr, req, wf)
@@ -136,7 +136,7 @@ func TestProjectDetailController(t *testing.T) {
 						)
 
 						suiteDetailHref := fmt.Sprintf(
-							"/projects/details/%s/suites/details/%s",
+							"/project/detail/%s/suite/detail/%s",
 							tc.projectId,
 							strconv.FormatUint(suites[suiteIndex].Id, 10),
 						)

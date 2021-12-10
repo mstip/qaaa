@@ -29,7 +29,9 @@ func CreateWaffel() *waffel.Waffel {
 		{Name: "projectDelete", Method: http.MethodPost, Url: "/project/detail/{projectId}/delete", Handler: projectDeleteController},
 		{Name: "projectUpdate", Method: http.MethodPost, Url: "/project/detail/{projectId}/update", Handler: projectUpdateController},
 		{Name: "projectEdit", Method: http.MethodGet, Url: "/project/detail/{projectId}/edit", Handler: projectEditController},
-		// TODO Suites
+		{Name: "suiteCreate", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/create", Handler: suiteCreateController},
+		{Name: "suiteStore", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/store", Handler: suiteStoreController},
+		{Name: "suiteDetail", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}", Handler: suiteDetailController},
 	}
 
 	middlewares := []waffel.Middleware{
@@ -74,4 +76,16 @@ func getProjectFromUrlParams(wf *waffel.Waffel, r *http.Request) (*model.Project
 		return nil, errors.New("project not found")
 	}
 	return project, nil
+}
+
+func getSuiteFromUrlParams(wf *waffel.Waffel, r *http.Request) (*model.Suite, error) {
+	sId, err := waffel.GetRouteParamAsUint64(r, "suiteId")
+	if err != nil {
+		return nil, err
+	}
+	suite := getStore(wf).GetSuiteById(sId)
+	if suite == nil {
+		return nil, errors.New("suite not found")
+	}
+	return suite, nil
 }
