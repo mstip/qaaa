@@ -45,7 +45,7 @@ func suiteStoreController(wr http.ResponseWriter, r *http.Request, wf *waffel.Wa
 		return
 	}
 
-	wf.RedirectToRoute(wr, r, "suiteDetail", params["url_projectId"], params["url_suiteId"])
+	wf.RedirectToRoute(wr, r, "suiteDetail", params["url_projectId"], strconv.FormatUint(s.Id, 10))
 }
 
 func suiteDetailController(wr http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {

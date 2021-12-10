@@ -11,7 +11,7 @@ import (
 	"github.com/mstip/qaaa/internal/tutils"
 )
 
-func TestSuiteCreateController(t *testing.T) {
+func TestSuiteStoreController(t *testing.T) {
 	wf := CreateWaffel()
 	wr := httptest.NewRecorder()
 
