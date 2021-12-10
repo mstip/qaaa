@@ -35,6 +35,9 @@ func CreateWaffel() *waffel.Waffel {
 		{Name: "suiteEdit", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/edit", Handler: suiteEditController},
 		{Name: "suiteUpdate", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/update", Handler: suiteUpdateController},
 		{Name: "suiteDelete", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/delete", Handler: suiteDeleteController},
+		{Name: "taskCreate", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/task/create", Handler: taskCreateController},
+		{Name: "taskStore", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/task/store", Handler: taskStoreController},
+		{Name: "taskDetail", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/task/detail/{taskId}", Handler: taskDetailController},
 	}
 
 	middlewares := []waffel.Middleware{
@@ -91,4 +94,16 @@ func getSuiteFromUrlParams(wf *waffel.Waffel, r *http.Request) (*model.Suite, er
 		return nil, errors.New("suite not found")
 	}
 	return suite, nil
+}
+
+func getTaskFromUrlParams(wf *waffel.Waffel, r *http.Request) (*model.Task, error) {
+	tId, err := waffel.GetRouteParamAsUint64(r, "taskId")
+	if err != nil {
+		return nil, err
+	}
+	task := getStore(wf).GetTaskById(tId)
+	if task == nil {
+		return nil, errors.New("task not found")
+	}
+	return task, nil
 }

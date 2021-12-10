@@ -7,6 +7,13 @@ import (
 	"github.com/mstip/qaaa/pkg/waffel"
 )
 
+type SuiteForm struct {
+	Title       string
+	Action      string
+	Name        string
+	Description string
+}
+
 func suiteCreateController(wr http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {
 	project, err := getProjectFromUrlParams(wf, r)
 	if err != nil {
@@ -21,7 +28,7 @@ func suiteCreateController(wr http.ResponseWriter, r *http.Request, wf *waffel.W
 			{Name: project.Name, Route: wf.GetUrlForRoute("projectDetail", params["url_projectId"])},
 			{Name: "Create New Suite", Route: ""},
 		},
-		"Form": ProjectForm{
+		"Form": SuiteForm{
 			Title:       "Create new suite",
 			Action:      wf.GetUrlForRoute("suiteStore", params["url_projectId"]),
 			Name:        "",
@@ -36,7 +43,6 @@ func suiteStoreController(wr http.ResponseWriter, r *http.Request, wf *waffel.Wa
 		http.Error(wr, err.Error(), http.StatusNotFound)
 		return
 	}
-
 	params := waffel.RequestParams(r, "name", "description", "projectId", "suiteId")
 
 	s := getStore(wf).CreateSuite(params["form_name"], params["form_description"], project.Id)
@@ -69,7 +75,6 @@ func suiteDetailController(wr http.ResponseWriter, r *http.Request, wf *waffel.W
 		"Breadcrumb": []Breadcrumb{
 			{Name: "Projects", Route: wf.GetUrlForRoute("projectList")},
 			{Name: project.Name, Route: wf.GetUrlForRoute("projectDetail", strconv.FormatUint(project.Id, 10))},
-			{Name: "Suites", Route: ""},
 			{Name: suite.Name, Route: ""},
 		},
 	})
@@ -93,11 +98,10 @@ func suiteEditController(w http.ResponseWriter, r *http.Request, wf *waffel.Waff
 		"Breadcrumb": []Breadcrumb{
 			{Name: "Projects", Route: wf.GetUrlForRoute("projectList")},
 			{Name: project.Name, Route: wf.GetUrlForRoute("projectDetail", strconv.FormatUint(project.Id, 10))},
-			{Name: "Suites", Route: ""},
-			{Name: suite.Name, Route: wf.GetUrlForRoute("suite_detail", params["url_projectId"], params["url_suiteId"])},
+			{Name: suite.Name, Route: wf.GetUrlForRoute("suiteDetail", params["url_projectId"], params["url_suiteId"])},
 			{Name: "Edit", Route: ""},
 		},
-		"Form": ProjectForm{
+		"Form": SuiteForm{
 			Title:       "Edit " + suite.Name,
 			Action:      wf.GetUrlForRoute("suiteUpdate", params["url_projectId"], params["url_suiteId"]),
 			Name:        suite.Name,

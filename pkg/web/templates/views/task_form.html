@@ -17,6 +17,14 @@
                             <label for="description" class="form-label">Description</label>
                             <textarea class="form-control" name="description" id="description">{{.Form.Description}}</textarea>
                         </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Type</label>
+                            <select name="type" id="type"  class="form-control" >
+                                <option value="jsonapi">jsonapi</option>
+                                <option value="web">web</option>
+                                <option value="manually">manually</option>
+                            </select>
+                        </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>

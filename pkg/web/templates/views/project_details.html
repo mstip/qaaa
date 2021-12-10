@@ -78,7 +78,7 @@
                     <tbody>
                       <tr>
                         <td colspan="2">
-                          <button class="btn btn-primary btn-sm">Create new test</button>
+                          <a class="btn btn-primary btn-sm" href="{{GetUrlForRouteUInt64 "taskCreate" $suite.ProjectId $suite.Id}}">Create new task</a>
                         </td>
                       </tr>
                       {{range $task := index $tasksBySuiteId $suite.Id}}
@@ -88,7 +88,7 @@
                         <td>{{$task.Description}}</td>
                         <td>
                           <a href="#" class="btn btn-outline-primary btn-sm">Run</a>
-                          <a href="#" class="btn btn-outline-primary btn-sm">Edit</a>
+                          <a href="{{GetUrlForRouteUInt64 "taskDetail" $suite.ProjectId $suite.Id $task.Id}}" class="btn btn-outline-primary btn-sm">Edit</a>
                         </td>
                       </tr>
                       {{end}}

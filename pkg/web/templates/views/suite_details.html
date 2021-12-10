@@ -24,7 +24,7 @@
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a href="#" class="btn btn-primary">Create New
+                  <a href="{{GetUrlForRouteUInt64 "taskCreate" .Suite.ProjectId .Suite.Id }}" class="btn btn-primary">Create New
                     Task</a>
                 </div>
               </div>
@@ -55,6 +55,7 @@
                   <button class="btn btn-primary btn-sm">Create new task</button>
                 </td>
               </tr>
+              {{$suite := .Suite}}
               {{range $task := .Tasks}}
               <tr>
                 <td><strong>{{$task.Type}}</strong></td>
@@ -62,7 +63,7 @@
                 <td>{{$task.Description}}</td>
                 <td>
                   <a href="#" class="btn btn-outline-primary btn-sm">Run</a>
-                  <a href="#" class="btn btn-outline-primary btn-sm">Edit</a>
+                  <a href="{{GetUrlForRouteUInt64 "taskDetail" $suite.ProjectId $suite.Id $task.Id}}" class="btn btn-outline-primary btn-sm">Edit</a>
                 </td>
               </tr>
               {{end}}
