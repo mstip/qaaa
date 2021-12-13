@@ -1,6 +1,10 @@
 package store
 
-import "github.com/mstip/qaaa/pkg/model"
+import (
+	"strconv"
+
+	"github.com/mstip/qaaa/pkg/model"
+)
 
 func (s *Store) newTaskId() uint64 {
 	s.idLock.Lock()
@@ -36,6 +40,47 @@ func (s *Store) GetTaskById(tId uint64) *model.Task {
 	for _, t := range s.tasks {
 		if t.Id == tId {
 			return &t
+		}
+	}
+	return nil
+}
+
+func (s *Store) UpdateTaskByIdParam(idParam string, name string, description string) *model.Task {
+	tId, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return nil
+	}
+
+	return s.UpdateTaskById(tId, name, description)
+}
+
+func (s *Store) UpdateTaskById(tId uint64, name string, description string) *model.Task {
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.tasks {
+		if v.Id == tId {
+			s.tasks[i].Name = name
+			s.tasks[i].Description = description
+			return &s.tasks[i]
+		}
+	}
+	return nil
+}
+func (s *Store) DeleteTaskByIdParm(idParam string) *model.Task {
+	tId, err := strconv.ParseUint(idParam, 10, 64)
+	if err != nil {
+		return nil
+	}
+	return s.DeleteTaskById(tId)
+}
+
+func (s *Store) DeleteTaskById(tId uint64) *model.Task {
+	s.dataLock.Lock()
+	defer s.dataLock.Unlock()
+	for i, v := range s.tasks {
+		if v.Id == tId {
+			s.tasks = append(s.tasks[:i], s.tasks[i+1:]...)
+			return &v
 		}
 	}
 	return nil
