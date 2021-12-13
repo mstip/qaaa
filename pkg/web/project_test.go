@@ -60,6 +60,7 @@ func TestProjectStoreController(t *testing.T) {
 	p := getStore(wf).GetProjectById(4)
 	if p == nil {
 		t.Error("could not find new project")
+		return
 	}
 
 	tutils.EqualI(t, 4, int(p.Id), "project id")

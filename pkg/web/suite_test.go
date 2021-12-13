@@ -92,7 +92,7 @@ func TestSuiteDetailController(t *testing.T) {
 					if err != nil {
 						t.Fatal(err)
 					}
-					task := getStore(wf).GetTasksBySuiteId(sId)[i-1]
+					task := getStore(wf).GetTasksBySuiteId(sId)[i]
 					tutils.EqualS(t, task.Type, row.Children().Eq(0).Text(), "task type")
 					tutils.EqualS(t, task.Name, row.Children().Eq(1).Text(), "task name")
 					tutils.EqualS(t, task.Description, row.Children().Eq(2).Text(), "task description")

@@ -31,3 +31,9 @@ func EqualNotNil(t *testing.T, obj interface{}, name string) {
 		t.Fatalf("%s - expected %#v to not be nil but it wasnt", name, obj)
 	}
 }
+
+func EqualB(t *testing.T, expected bool, actual bool, name string) {
+	if expected != actual {
+		t.Fatalf("%s - expected %t got %t", name, expected, actual)
+	}
+}
