@@ -7,6 +7,14 @@ import (
 	"strings"
 )
 
+func convertArrToMap(arr []interface{}) map[string]interface{} {
+	m := map[string]interface{}{}
+	for k, v := range arr {
+		m[strconv.Itoa(k)] = v
+	}
+	return m
+}
+
 func PathValFromJson(path string, raw []byte) (interface{}, error) {
 	val := map[string]interface{}{}
 	jsonArray := []interface{}{}
@@ -17,9 +25,7 @@ func PathValFromJson(path string, raw []byte) (interface{}, error) {
 			return nil, err
 		}
 
-		for k, v := range jsonArray {
-			val[strconv.Itoa(k)] = v
-		}
+		val = convertArrToMap(jsonArray)
 	}
 
 	splitedPath := strings.Split(path, ".")
@@ -33,11 +39,17 @@ func PathValFromJson(path string, raw []byte) (interface{}, error) {
 		if i == len(splitedPath)-1 {
 			return cpVal[sp], nil
 		}
+		origin := cpVal[sp]
 		cpVal, ok = cpVal[sp].(map[string]interface{})
 		if !ok {
-			return nil, fmt.Errorf("fail to convert %#v", cpVal[sp])
+			arrVal, ok := origin.([]interface{})
+			if !ok {
+				return nil, fmt.Errorf("fail to convert %#v", cpVal[sp])
+			}
+
+			cpVal = convertArrToMap(arrVal)
 		}
 	}
 
-	return nil, nil
+	return nil, fmt.Errorf("fail %#v", cpVal)
 }

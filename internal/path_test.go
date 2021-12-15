@@ -63,6 +63,13 @@ func TestPathValFromJson(t *testing.T) {
 			path:        "0",
 			expectedVal: float64(1),
 		},
+		{
+			desc:        "nested arrays",
+			success:     true,
+			json:        `[1, "2", {"arr": ["3","4",{"deep": ["5",6]}, "7"]}]`,
+			path:        "2.arr.2.deep.1",
+			expectedVal: float64(6),
+		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
