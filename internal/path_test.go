@@ -70,6 +70,20 @@ func TestPathValFromJson(t *testing.T) {
 			path:        "2.arr.2.deep.1",
 			expectedVal: float64(6),
 		},
+		{
+			desc:        "nested arrays not last value",
+			success:     true,
+			json:        `[1, "2", {"arr": ["3","4",{"deep": ["5",6]}, "7"]}]`,
+			path:        "2.arr.2.deep",
+			expectedVal: []interface{}{"5", float64(6)},
+		},
+		{
+			desc:        "get root",
+			success:     true,
+			json:        `{"root":"root"}`,
+			path:        "",
+			expectedVal: map[string]interface{}{"root": "root"},
+		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
@@ -80,9 +94,34 @@ func TestPathValFromJson(t *testing.T) {
 				tutils.EqualNotNil(t, err, "success")
 				return
 			}
-			if val != tC.expectedVal {
-				t.Fatalf("val - expected (%T)%#v got (%T)%#v", tC.expectedVal, tC.expectedVal, val, val)
+
+			switch exVal := tC.expectedVal.(type) {
+			case []interface{}:
+				for i := range exVal {
+					val, ok := val.([]interface{})
+					if !ok {
+						t.Fatalf("could not convert %v", val)
+					}
+					if val[i] != exVal[i] {
+						t.Fatalf("val - expected (%T)%#v got (%T)%#v", exVal[i], exVal[i], val[i], val[i])
+					}
+				}
+			case map[string]interface{}:
+				for i := range exVal {
+					val, ok := val.(map[string]interface{})
+					if !ok {
+						t.Fatalf("could not convert %v", val)
+					}
+					if val[i] != exVal[i] {
+						t.Fatalf("val - expected (%T)%#v got (%T)%#v", exVal[i], exVal[i], val[i], val[i])
+					}
+				}
+			default:
+				if val != tC.expectedVal {
+					t.Fatalf("val - expected (%T)%#v got (%T)%#v", tC.expectedVal, tC.expectedVal, val, val)
+				}
 			}
+
 		})
 	}
 }

@@ -2,7 +2,6 @@ package task
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -22,16 +21,16 @@ type WebTaskCheck struct {
 	Selector string
 	Count    int
 	Key      string
-	Value    string
+	Value    interface{}
 }
 
 type WebTaskRequest struct {
 	Method      string
 	Url         string
 	StatusCode  int
-	Checks      []WebTaskCheck
 	ExpectedUrl string
 	FormParams  map[string]interface{}
+	Checks      []WebTaskCheck
 }
 
 type WebTaskResult struct {
@@ -39,22 +38,29 @@ type WebTaskResult struct {
 	Detail  string
 }
 
-func WebTask(request WebTaskRequest) (WebTaskResult, error) {
+func httpRequest(request WebTaskRequest) (*http.Response, error) {
 	client := &http.Client{}
 	req, err := http.NewRequest(request.Method, request.Url, nil)
 	if err != nil {
-		return WebTaskResult{Success: false, Detail: err.Error()}, err
+		return nil, err
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		return WebTaskResult{Success: false, Detail: err.Error()}, err
+		return nil, err
 	}
 
 	if request.StatusCode != 0 {
 		if request.StatusCode != resp.StatusCode {
-			log.Println("status code missmatch", request.StatusCode, resp.StatusCode)
-			return WebTaskResult{Success: false, Detail: fmt.Sprintf("status code - expected %d got %d", request.StatusCode, resp.StatusCode)}, nil
+			return nil, fmt.Errorf("status code - expected %d got %d", request.StatusCode, resp.StatusCode)
 		}
+	}
+	return resp, nil
+}
+
+func WebTask(request WebTaskRequest) (WebTaskResult, error) {
+	resp, err := httpRequest(request)
+	if err != nil {
+		return WebTaskResult{Success: false, Detail: err.Error()}, nil
 	}
 
 	if len(request.Checks) > 0 {
@@ -103,11 +109,19 @@ func checkKeyValGeneric(check WebTaskCheck, doc *goquery.Document) error {
 			return fmt.Errorf("selector: %s - equals not - expected attr %s %s got %s ", check.Selector, check.Key, check.Value, selectorAttrValue)
 		}
 	case WebTaskSelectorCheck_Contains:
-		if !strings.Contains(selectorAttrValue, check.Value) {
+		checkValStr, ok := check.Value.(string)
+		if !ok {
+			return fmt.Errorf("val %v is not a string ", check.Value)
+		}
+		if !strings.Contains(selectorAttrValue, checkValStr) {
 			return fmt.Errorf("selector: %s - contains - expected attr %s %s contains %s ", check.Selector, check.Key, check.Value, selectorAttrValue)
 		}
 	case WebTaskSelectorCheck_ContainsNot:
-		if strings.Contains(selectorAttrValue, check.Value) {
+		checkValStr, ok := check.Value.(string)
+		if !ok {
+			return fmt.Errorf("val %v is not a string ", check.Value)
+		}
+		if strings.Contains(selectorAttrValue, checkValStr) {
 			return fmt.Errorf("selector: %s - contains not - expected attr %s %s contains %s ", check.Selector, check.Key, check.Value, selectorAttrValue)
 		}
 	}

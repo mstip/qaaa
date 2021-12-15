@@ -28,7 +28,11 @@ func TestWebRequestStatusCode(t *testing.T) {
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
-			result, err := WebTask(WebTaskRequest{Method: "GET", Url: tC.url, StatusCode: tC.statusCode})
+			result, err := WebTask(
+				WebTaskRequest{
+					Method: "GET", Url: tC.url, StatusCode: tC.statusCode,
+				},
+			)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -196,11 +200,10 @@ func TestWebTaskChecks(t *testing.T) {
 		t.Run(tC.desc, func(t *testing.T) {
 			result, err := WebTask(
 				WebTaskRequest{
-					Method:     "GET",
-					Url:        "http://example.com",
-					StatusCode: 200,
-					Checks:     tC.checks,
-				})
+					Checks: tC.checks,
+					Method: "GET", Url: "http://example.com", StatusCode: 200,
+				},
+			)
 			if err != nil {
 				t.Fatal(err)
 			}

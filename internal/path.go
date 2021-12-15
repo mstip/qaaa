@@ -28,6 +28,10 @@ func PathValFromJson(path string, raw []byte) (interface{}, error) {
 		val = convertArrToMap(jsonArray)
 	}
 
+	if len(path) == 0 {
+		return val, nil
+	}
+
 	splitedPath := strings.Split(path, ".")
 	if len(splitedPath) == 1 {
 		return val[splitedPath[0]], nil

@@ -30,5 +30,5 @@ type Task struct {
 	Name        string
 	Description string
 	Type        string
-	Task        task.Tasker
+	Task        task.WebTaskRequest
 }
