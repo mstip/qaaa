@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/mstip/qaaa/pkg/task"
 	"github.com/mstip/qaaa/pkg/waffel"
 )
 
@@ -140,4 +141,35 @@ func taskDeleteController(w http.ResponseWriter, r *http.Request, wf *waffel.Waf
 		return
 	}
 	wf.RedirectToRoute(w, r, "suiteDetail", params["url_projectId"], params["url_suiteId"])
+}
+
+func taskTestRunController(w http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {
+	body, err := waffel.JsonBody(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	method, ok := body["method"].(string)
+	if !ok {
+		http.Error(w, "method is not a string", http.StatusBadRequest)
+		return
+	}
+	url, ok := body["url"].(string)
+	if !ok {
+		http.Error(w, "url is not a string", http.StatusBadRequest)
+		return
+	}
+
+	result, err := task.TaskTestRun("json", method, url)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = waffel.JsonResponse(w, result)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

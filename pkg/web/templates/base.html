@@ -9,10 +9,16 @@
     <link rel="stylesheet" href="/static/bootstrap.min.css">
     <link rel="stylesheet" href="/static/bootstrap-icons.css">
     <link rel="stylesheet" href="/static/style.css">
-    <script defer src="/static/alpine.min.js"></script>
+    {{template "styles" .}}
   </head>
   <body>
       {{template "main" .}}
+      <script defer src="/static/axios.min.js"></script>
+      {{template "scripts" .}}
   </body>
 </html>
+{{end}}
+{{define "styles"}}
+{{end}}
+{{define "scripts"}}
 {{end}}

@@ -19,23 +19,112 @@
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a class="btn btn-primary" href="{{GetUrlForRouteUInt64 "taskEdit" .Project.Id .Suite.Id .Task.Id }}">Edit</a>
+                  <a class="btn btn-primary" href="">Save</a>
                 </div>
               </div>
-       
               <div class="col-2">
-                <form action="{{GetUrlForRouteUInt64 "taskDelete" .Project.Id .Suite.Id .Task.Id}}" method="POST"
-                  onsubmit="return confirm('Do you really want to delete this task');">
+                <div class="d-grid">
+                  <a class="btn btn-primary" href="{{GetUrlForRouteUInt64 " taskEdit" .Project.Id .Suite.Id .Task.Id}}">Settings</a>
+                </div>
+              </div>
+
+              <div class="col-2">
+                <form action="{{GetUrlForRouteUInt64 " taskDelete" .Project.Id .Suite.Id .Task.Id}}" method="POST" onsubmit="return confirm('Do you really want to delete this task');">
                   <div class="d-grid">
                     <button type="submit" class="btn btn-danger">Delete</button>
                   </div>
                 </form>
               </div>
             </div>
+            <hr>
+            <div class="row">
+              <h5>Action</h5>
+              <form>
+                <div>
+                  <label for="method" class="form-label">Method</label>
+                  <select name="method" id="method" class="form-control">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="url" class="form-label">Url</label>
+                  <input type="text" class="form-control" id="url" name="url" value="{{.Task.Task.Url}}">
+                </div>
+                <button class="btn btn-primary mt-3" id="testRunBtn">Test run</button>
+              </form>
+             
+            </div>
+            <div class="row">
+              <pre id="test-run-result" class="col mt-3"></pre>
+            </div>
+            <div class="row">
+              <h5>Checks</h5>
+
+              <form action="">
+                <div>
+                  <div>
+                    <label for="selector" class="form-label">Selector</label>
+                    <input type="text" class="form-control" id="selector" name="selector" value="">
+                  </div>
+                  <label for="type" class="form-label">Type</label>
+                  <select name="type" id="type" class="form-control">
+                    <option value="equals">Equals</option>
+                    <option value="equalsNot">Equals Not</option>
+                    <option value="contains">Contains</option>
+                    <option value="containsNot">Contains Not</option>
+                    <option value="count">Count</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="expectedValue" class="form-label">Expected Value</label>
+                  <input type="text" class="form-control" id="expectedValue" name="expectedValue">
+                </div>
+              </form>
+              <pre id="test-run-result"></pre>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
+{{end}}
+{{define "styles"}}
+<style>
+  pre#test-run-result {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: white;
+    color:black;
+    font-size: 12px;
+  }
+</style>
+{{end}}
+
+{{define "scripts"}}
+<script>
+  document.getElementById("testRunBtn").onclick = (event) => {
+    event.preventDefault();
+    const method = document.getElementById("method").value;
+    const url = document.getElementById("url").value;
+    document.getElementById("test-run-result").innerText = "request send, waiting for response ...."
+
+    axios.post("/task/testrun", { method, url }).then(function (response) {
+      document.getElementById("test-run-result").innerText = `============================== Status ==============================\n`;
+      document.getElementById("test-run-result").innerText += JSON.stringify({
+        status: response.status,
+        statusTest: response.statusText,
+        headers: response.headers
+      }, 0, 2);
+      document.getElementById("test-run-result").innerText += `\n============================== Data ==============================\n`
+      document.getElementById("test-run-result").innerText += JSON.stringify(response.data, 0, 2);
+    })
+      .catch(function (error) {
+        document.getElementById("test-run-result").innerText = JSON.stringify(error, 0, 2);
+      })
+  }
+</script>
 {{end}}

@@ -84,6 +84,20 @@ func TestPathValFromJson(t *testing.T) {
 			path:        "",
 			expectedVal: map[string]interface{}{"root": "root"},
 		},
+		{
+			desc:        "wrong key",
+			success:     true,
+			json:        `{"root":"root"}`,
+			path:        "wrong",
+			expectedVal: nil,
+		},
+		{
+			desc:        "wrong key array",
+			success:     true,
+			json:        `[1,2,3,4,5]`,
+			path:        "6",
+			expectedVal: nil,
+		},
 	}
 	for _, tC := range testCases {
 		t.Run(tC.desc, func(t *testing.T) {
