@@ -14,12 +14,12 @@
             <div class="row">
               <div class="col-2">
                 <div class="d-grid">
-                  <a href="#" class="btn btn-primary">Run</a>
+                  <button id="run" class="btn btn-primary">Run</button>
                 </div>
               </div>
               <div class="col-2">
                 <div class="d-grid">
-                  <a class="btn btn-primary" href="">Save</a>
+                  <button id="save" class="btn btn-primary" href="">Save</button>
                 </div>
               </div>
               <div class="col-2">
@@ -51,37 +51,16 @@
                   <label for="url" class="form-label">Url</label>
                   <input type="text" class="form-control" id="url" name="url" value="{{.Task.Task.Url}}">
                 </div>
-                <button class="btn btn-primary mt-3" id="testRunBtn">Test run</button>
+                <button class="btn btn-primary mt-3" id="test-run">Test run</button>
               </form>
-             
+
             </div>
             <div class="row">
               <pre id="test-run-result" class="col mt-3"></pre>
             </div>
             <div class="row">
               <h5>Checks</h5>
-
-              <form action="">
-                <div>
-                  <div>
-                    <label for="selector" class="form-label">Selector</label>
-                    <input type="text" class="form-control" id="selector" name="selector" value="">
-                  </div>
-                  <label for="type" class="form-label">Type</label>
-                  <select name="type" id="type" class="form-control">
-                    <option value="equals">Equals</option>
-                    <option value="equalsNot">Equals Not</option>
-                    <option value="contains">Contains</option>
-                    <option value="containsNot">Contains Not</option>
-                    <option value="count">Count</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="expectedValue" class="form-label">Expected Value</label>
-                  <input type="text" class="form-control" id="expectedValue" name="expectedValue">
-                </div>
-              </form>
-              <pre id="test-run-result"></pre>
+              <div id="checks"></div>
             </div>
           </div>
 
@@ -98,33 +77,12 @@
     overflow-y: scroll;
     overflow-x: hidden;
     background-color: white;
-    color:black;
+    color: black;
     font-size: 12px;
   }
 </style>
 {{end}}
 
 {{define "scripts"}}
-<script>
-  document.getElementById("testRunBtn").onclick = (event) => {
-    event.preventDefault();
-    const method = document.getElementById("method").value;
-    const url = document.getElementById("url").value;
-    document.getElementById("test-run-result").innerText = "request send, waiting for response ...."
-
-    axios.post("/task/testrun", { method, url }).then(function (response) {
-      document.getElementById("test-run-result").innerText = `============================== Status ==============================\n`;
-      document.getElementById("test-run-result").innerText += JSON.stringify({
-        status: response.status,
-        statusTest: response.statusText,
-        headers: response.headers
-      }, 0, 2);
-      document.getElementById("test-run-result").innerText += `\n============================== Data ==============================\n`
-      document.getElementById("test-run-result").innerText += JSON.stringify(response.data, 0, 2);
-    })
-      .catch(function (error) {
-        document.getElementById("test-run-result").innerText = JSON.stringify(error, 0, 2);
-      })
-  }
-</script>
+<script src="/static/scripts/task_detail/main.js" type="module"></script>
 {{end}}

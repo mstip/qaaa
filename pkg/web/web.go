@@ -41,7 +41,8 @@ func CreateWaffel() *waffel.Waffel {
 		{Name: "taskEdit", Method: http.MethodGet, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/task/detail/{taskId}/edit", Handler: taskEditController},
 		{Name: "taskUpdate", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/task/detail/{taskId}/update", Handler: taskUpdateController},
 		{Name: "taskDelete", Method: http.MethodPost, Url: "/project/detail/{projectId}/suite/detail/{suiteId}/task/detail/{taskId}/delete", Handler: taskDeleteController},
-		{Name: "taskTestRun", Method: http.MethodPost, Url: "/task/testrun", Handler: taskTestRunController},
+		{Name: "taskTestRun", Method: http.MethodPost, Url: "/api/task/testrun", Handler: taskTestRunController},
+		{Name: "taskChecks", Method: http.MethodGet, Url: "/api/task/detail/{taskId}/checks", Handler: taskChecksRunController},
 	}
 
 	middlewares := []waffel.Middleware{

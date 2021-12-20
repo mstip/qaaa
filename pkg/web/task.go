@@ -173,3 +173,16 @@ func taskTestRunController(w http.ResponseWriter, r *http.Request, wf *waffel.Wa
 		return
 	}
 }
+
+func taskChecksRunController(w http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {
+	task, err := getTaskFromUrlParams(wf, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	err = waffel.JsonResponse(w, task.Task.Checks)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
