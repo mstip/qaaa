@@ -2,6 +2,7 @@ package task
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -34,8 +35,9 @@ type WebTaskRequest struct {
 }
 
 type WebTaskResult struct {
-	Success bool
-	Detail  string
+	Success      bool
+	Detail       string
+	ResponseBody string
 }
 
 func httpRequest(request WebTaskRequest) (*http.Response, error) {
@@ -60,31 +62,43 @@ func httpRequest(request WebTaskRequest) (*http.Response, error) {
 func WebTask(request WebTaskRequest) (WebTaskResult, error) {
 	resp, err := httpRequest(request)
 	if err != nil {
+		return WebTaskResult{Success: false, Detail: err.Error()}, err
+	}
+
+	defer resp.Body.Close()
+	rawBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return WebTaskResult{Success: false, Detail: err.Error()}, err
+	}
+
+	respBody := string(rawBody)
+
+	if err != nil {
 		return WebTaskResult{Success: false, Detail: err.Error()}, nil
 	}
 
 	if len(request.Checks) > 0 {
 		doc, err := goquery.NewDocumentFromReader(resp.Body)
 		if err != nil {
-			return WebTaskResult{Success: false, Detail: err.Error()}, err
+			return WebTaskResult{Success: false, Detail: err.Error(), ResponseBody: respBody}, err
 		}
 		for _, check := range request.Checks {
 			if check.Type == WebTaskSelectorCheck_Equals || check.Type == WebTaskSelectorCheck_EqualsNot ||
 				check.Type == WebTaskSelectorCheck_Contains || check.Type == WebTaskSelectorCheck_ContainsNot {
 				if err = checkKeyValGeneric(check, doc); err != nil {
-					return WebTaskResult{Success: false, Detail: err.Error()}, nil
+					return WebTaskResult{Success: false, Detail: err.Error(), ResponseBody: respBody}, nil
 				}
 			} else if check.Type == WebTaskSelectorCheck_Count {
 				if err = checkCount(check, doc); err != nil {
-					return WebTaskResult{Success: false, Detail: err.Error()}, nil
+					return WebTaskResult{Success: false, Detail: err.Error(), ResponseBody: respBody}, nil
 				}
 			} else {
 				err = fmt.Errorf("unkown web check type %s", check.Type)
-				return WebTaskResult{Success: false, Detail: err.Error()}, err
+				return WebTaskResult{Success: false, Detail: err.Error(), ResponseBody: respBody}, err
 			}
 		}
 	}
-	return WebTaskResult{Success: true, Detail: "success"}, nil
+	return WebTaskResult{Success: true, Detail: "success", ResponseBody: respBody}, nil
 }
 
 func checkKeyValGeneric(check WebTaskCheck, doc *goquery.Document) error {

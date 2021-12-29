@@ -143,7 +143,7 @@ func taskDeleteController(w http.ResponseWriter, r *http.Request, wf *waffel.Waf
 	wf.RedirectToRoute(w, r, "suiteDetail", params["url_projectId"], params["url_suiteId"])
 }
 
-func taskTestRunController(w http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {
+func taskRunController(w http.ResponseWriter, r *http.Request, wf *waffel.Waffel) {
 	body, err := waffel.JsonBody(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -161,13 +161,53 @@ func taskTestRunController(w http.ResponseWriter, r *http.Request, wf *waffel.Wa
 		return
 	}
 
-	result, err := task.TaskTestRun("json", method, url)
+	rawChecks, ok := body["checks"].([]interface{})
+	if !ok {
+		http.Error(w, "could not parse checks", http.StatusBadRequest)
+		return
+	}
+
+	checks := []task.WebTaskCheck{}
+	for _, c := range rawChecks {
+		cc, ok := c.(map[string]interface{})
+		if !ok {
+			http.Error(w, "could not parse check", http.StatusBadRequest)
+			return
+		}
+		if cc["type"].(string) == "count" {
+			valInt, err := strconv.Atoi(cc["expectedValue"].(string))
+			if err != nil {
+				http.Error(w, "could not parse expectedValue", http.StatusBadRequest)
+				return
+			}
+
+			checks = append(checks, task.WebTaskCheck{
+				Selector: cc["selector"].(string),
+				Value:    valInt,
+				Type:     cc["type"].(string),
+			})
+		} else {
+			checks = append(checks, task.WebTaskCheck{
+				Selector: cc["selector"].(string),
+				Value:    cc["expectedValue"],
+				Type:     cc["type"].(string),
+			})
+		}
+	}
+
+	request := task.WebTaskRequest{
+		Method: method,
+		Url:    url,
+		Checks: checks,
+	}
+
+	taskResult, err := task.JsonApiTask(request)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = waffel.JsonResponse(w, result)
+	err = waffel.JsonResponse(w, taskResult)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

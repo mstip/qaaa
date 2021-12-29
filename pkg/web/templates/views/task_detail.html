@@ -36,6 +36,9 @@
                 </form>
               </div>
             </div>
+            <div id="run-result" class="row">
+            
+            </div>
             <hr>
             <div class="row">
               <h5>Action</h5>
@@ -51,14 +54,9 @@
                   <label for="url" class="form-label">Url</label>
                   <input type="text" class="form-control" id="url" name="url" value="{{.Task.Task.Url}}">
                 </div>
-                <button class="btn btn-primary mt-3" id="test-run">Test run</button>
               </form>
-
             </div>
-            <div class="row">
-              <pre id="test-run-result" class="col mt-3"></pre>
-            </div>
-            <div class="row">
+            <div class="row mt-3">
               <h5>Checks</h5>
               <div id="checks"></div>
             </div>
@@ -72,7 +70,7 @@
 {{end}}
 {{define "styles"}}
 <style>
-  pre#test-run-result {
+  pre {
     max-height: 500px;
     overflow-y: scroll;
     overflow-x: hidden;
